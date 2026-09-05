@@ -1,109 +1,255 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <!-- 
+      ==========================================================================
+      META TAGS & DOCUMENT CONFIGURATION
+      ========================================================================== 
+    -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="AI Vision">
+    <meta name="application-name" content="AI Vision">
     <meta name="theme-color" content="#4285F4">
-    <title>Advanced iOS Liquid Glass AI Vision</title>
+    <meta name="format-detection" content="telephone=no">
+    <meta name="description" content="Advanced Neural Image Classification Engine using TensorFlow.js and Teachable Machine.">
+    <meta name="author" content="NeuralVision Systems">
+    
+    <title>Advanced iOS Liquid Glass AI Vision - Core</title>
 
-    <!-- TensorFlow.js and Teachable Machine Libraries -->
+    <!-- 
+      ==========================================================================
+      EXTERNAL LIBRARIES & DEPENDENCIES
+      ========================================================================== 
+    -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
 
+    <!-- 
+      ==========================================================================
+      GLOBAL STYLESHEET
+      ========================================================================== 
+    -->
     <style>
-        /* ==========================================================================
-           CSS RESET & BASE TYPOGRAPHY
-           ========================================================================== */
+        /* ----------------------------------------------------------------------
+           1. COMPREHENSIVE CSS RESET & NORMALIZE
+           ---------------------------------------------------------------------- */
         *, *::before, *::after {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            border: 0;
+            outline: 0;
+            font-size: 100%;
+            vertical-align: baseline;
+            background: transparent;
         }
 
         html, body {
             height: 100%;
             width: 100%;
-            overflow: hidden;
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            overflow: hidden; /* Prevents bouncing on iOS */
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
-            background-color: #000;
+            text-rendering: optimizeLegibility;
+            background-color: #000000;
+            color: #ffffff;
+            touch-action: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        /* ==========================================================================
-           GOOGLE GRADIENT BACKGROUND SYSTEM
-           ========================================================================== */
-        .google-gradient-bg {
+        article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section, main {
+            display: block;
+        }
+
+        ul, ol {
+            list-style: none;
+        }
+
+        blockquote, q {
+            quotes: none;
+        }
+
+        blockquote:before, blockquote:after, q:before, q:after {
+            content: '';
+            content: none;
+        }
+
+        table {
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+
+        input, button, textarea, select {
+            font-family: inherit;
+            font-size: inherit;
+            line-height: inherit;
+            margin: 0;
+            padding: 0;
+            border: none;
+            background: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        img, video, canvas, audio, iframe, embed, object {
+            display: block;
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* ----------------------------------------------------------------------
+           2. DESIGN SYSTEM & CSS VARIABLES
+           ---------------------------------------------------------------------- */
+        :root {
+            /* Google Brand Colors */
+            --google-blue: #4285F4;
+            --google-red: #EA4335;
+            --google-yellow: #FBBC05;
+            --google-green: #34A853;
+
+            /* Liquid Glass Colors */
+            --glass-base: rgba(255, 255, 255, 0.15);
+            --glass-highlight: rgba(255, 255, 255, 0.35);
+            --glass-shadow-color: rgba(0, 0, 0, 0.25);
+            
+            /* Typography */
+            --font-size-xs: 0.75rem;
+            --font-size-sm: 0.875rem;
+            --font-size-md: 1rem;
+            --font-size-lg: 1.25rem;
+            --font-size-xl: 1.5rem;
+            --font-size-xxl: 2rem;
+
+            --font-weight-regular: 400;
+            --font-weight-medium: 500;
+            --font-weight-semibold: 600;
+            --font-weight-bold: 700;
+            --font-weight-extrabold: 800;
+
+            /* Spacing */
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+            --spacing-xxl: 48px;
+
+            /* Border Radii */
+            --radius-sm: 8px;
+            --radius-md: 16px;
+            --radius-lg: 24px;
+            --radius-xl: 32px;
+            --radius-round: 50%;
+
+            /* Transitions */
+            --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-normal: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: 500ms cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-bounce: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        /* ----------------------------------------------------------------------
+           3. DYNAMIC BACKGROUND ENGINE (GOOGLE GRADIENTS)
+           ---------------------------------------------------------------------- */
+        .ambient-environment {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            z-index: 0;
-            /* Google Colors: Blue, Red, Yellow, Green */
+            z-index: 1;
+            overflow: hidden;
+            background-color: #000;
+            /* Multi-stop moving gradient using Google colors */
             background: linear-gradient(
-                -45deg, 
-                #4285F4, 
-                #EA4335, 
-                #FBBC05, 
-                #34A853,
-                #4285F4,
-                #EA4335
+                125deg, 
+                var(--google-blue) 0%, 
+                var(--google-red) 33%, 
+                var(--google-yellow) 66%, 
+                var(--google-green) 100%
             );
             background-size: 400% 400%;
-            animation: googleGradientFlow 12s ease infinite;
+            animation: flowingGradient 15s ease-in-out infinite alternate;
         }
 
-        @keyframes googleGradientFlow {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        @keyframes flowingGradient {
+            0% {
+                background-position: 0% 0%;
+            }
+            50% {
+                background-position: 100% 100%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
         }
 
-        /* Ambient floating light orbs to enhance the liquid glass reflections */
-        .light-orb {
+        /* Floating light orbs for deeper liquid reflection context */
+        .ambient-orb {
             position: absolute;
-            border-radius: 50%;
-            filter: blur(90px);
+            border-radius: var(--radius-round);
+            filter: blur(100px);
             opacity: 0.6;
-            z-index: 1;
+            z-index: 2;
             mix-blend-mode: screen;
-            animation: orbFloat 25s infinite alternate ease-in-out;
+            pointer-events: none;
+            will-change: transform;
         }
 
-        .orb-blue {
-            width: 50vw; height: 50vw;
-            background: radial-gradient(circle, #ffffff 0%, #4285F4 100%);
-            top: -10%; left: -10%;
+        .ambient-orb-primary {
+            width: 60vw;
+            height: 60vw;
+            background: radial-gradient(circle at center, #ffffff 0%, var(--google-blue) 100%);
+            top: -20vh;
+            left: -10vw;
+            animation: floatOrb 20s infinite alternate cubic-bezier(0.45, 0.05, 0.55, 0.95);
         }
 
-        .orb-red {
-            width: 60vw; height: 60vw;
-            background: radial-gradient(circle, #ffffff 0%, #EA4335 100%);
-            bottom: -20%; right: -10%;
-            animation-delay: -5s;
+        .ambient-orb-secondary {
+            width: 50vw;
+            height: 50vw;
+            background: radial-gradient(circle at center, #ffffff 0%, var(--google-red) 100%);
+            bottom: -10vh;
+            right: -20vw;
+            animation: floatOrbReverse 25s infinite alternate cubic-bezier(0.45, 0.05, 0.55, 0.95);
         }
 
-        .orb-yellow {
-            width: 40vw; height: 40vw;
-            background: radial-gradient(circle, #ffffff 0%, #FBBC05 100%);
-            top: 40%; left: 30%;
-            animation-delay: -10s;
+        .ambient-orb-tertiary {
+            width: 40vw;
+            height: 40vw;
+            background: radial-gradient(circle at center, #ffffff 0%, var(--google-yellow) 100%);
+            top: 30vh;
+            left: 20vw;
+            animation: floatOrb 30s infinite alternate-reverse cubic-bezier(0.45, 0.05, 0.55, 0.95);
         }
 
-        @keyframes orbFloat {
+        @keyframes floatOrb {
             0% { transform: translate(0, 0) scale(1); }
-            33% { transform: translate(15vw, -10vh) scale(1.2); }
-            66% { transform: translate(-10vw, 15vh) scale(0.8); }
-            100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(10vw, -10vh) scale(1.1); }
+            100% { transform: translate(-5vw, 15vh) scale(0.9); }
         }
 
-        /* ==========================================================================
-           IOS LIQUID GLASSMORPHISM SYSTEM
-           ========================================================================== */
-        .app-wrapper {
+        @keyframes floatOrbReverse {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(-15vw, 10vh) scale(1.2); }
+            100% { transform: translate(10vw, -5vh) scale(0.8); }
+        }
+
+        /* ----------------------------------------------------------------------
+           4. MAIN LAYOUT AND LIQUID GLASS PANEL
+           ---------------------------------------------------------------------- */
+        .application-root {
             position: relative;
             z-index: 10;
             width: 100vw;
@@ -111,56 +257,56 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
-            perspective: 1000px;
+            padding: var(--spacing-md);
+            /* Removed perspective and 3D space to eliminate parallax */
         }
 
-        .liquid-glass-panel {
+        .liquid-glass-chassis {
             width: 100%;
-            max-width: 420px;
+            max-width: 450px;
             height: 100%;
-            max-height: 850px;
+            max-height: 900px;
             
-            /* Core Liquid Glass Properties */
+            /* Liquid Glass Morphism Texture */
             background: linear-gradient(
                 135deg, 
-                rgba(255, 255, 255, 0.25) 0%, 
-                rgba(255, 255, 255, 0.05) 100%
+                rgba(255, 255, 255, 0.20) 0%, 
+                rgba(255, 255, 255, 0.03) 100%
             );
-            backdrop-filter: blur(40px) saturate(200%);
-            -webkit-backdrop-filter: blur(40px) saturate(200%);
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
             
-            /* Highlight borders for 3D liquid edge effect */
-            border-top: 1px solid rgba(255, 255, 255, 0.6);
-            border-left: 1px solid rgba(255, 255, 255, 0.4);
+            /* High-fidelity iOS beveling */
+            border-top: 1px solid rgba(255, 255, 255, 0.7);
+            border-left: 1px solid rgba(255, 255, 255, 0.5);
             border-right: 1px solid rgba(255, 255, 255, 0.1);
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            
             border-radius: 40px;
             
-            /* Complex shadowing for depth */
+            /* Volumetric shadow for elevation */
             box-shadow: 
-                0 30px 60px rgba(0, 0, 0, 0.4),
-                inset 0 1px 0 rgba(255, 255, 255, 0.5),
-                inset 0 0 20px rgba(255, 255, 255, 0.2);
+                0 30px 60px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4),
+                inset 0 0 30px rgba(255, 255, 255, 0.1);
             
             display: flex;
             flex-direction: column;
             overflow: hidden;
             position: relative;
-            transform-style: preserve-3d;
-            transition: transform 0.3s ease;
+            /* Removed transform transition related to parallax */
         }
 
-        /* Inner light reflection simulating thick glass */
-        .liquid-glass-panel::before {
+        /* Liquid inner reflection overlay */
+        .liquid-glass-chassis::after {
             content: '';
             position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 120px;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 150px;
             background: linear-gradient(
                 to bottom, 
-                rgba(255,255,255,0.3) 0%, 
+                rgba(255,255,255,0.4) 0%, 
                 rgba(255,255,255,0) 100%
             );
             pointer-events: none;
@@ -169,748 +315,933 @@
             border-top-right-radius: 40px;
         }
 
-        /* ==========================================================================
-           HEADER COMPONENT
-           ========================================================================== */
-        .header {
-            padding: 30px 24px 20px;
-            text-align: center;
-            position: relative;
-            z-index: 20;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        .header h1 {
-            font-size: 28px;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            color: #ffffff;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
-            margin-bottom: 6px;
-        }
-
-        .header p {
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.8);
-            font-weight: 500;
-            text-shadow: 0 1px 4px rgba(0,0,0,0.2);
-        }
-
-        /* ==========================================================================
-           CAMERA VIEWPORT (Liquid UI)
-           ========================================================================== */
-        .viewport-section {
-            padding: 24px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            position: relative;
-            z-index: 20;
-        }
-
-        .camera-frame {
-            width: 100%;
-            aspect-ratio: 1 / 1;
-            max-width: 320px;
-            
-            /* Nested glass effect */
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            
-            border-radius: 32px;
-            border-top: 1px solid rgba(0, 0, 0, 0.6);
-            border-left: 1px solid rgba(0, 0, 0, 0.3);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-            border-right: 1px solid rgba(255, 255, 255, 0.1);
-            
-            box-shadow: 
-                inset 0 10px 30px rgba(0, 0, 0, 0.5),
-                0 15px 30px rgba(0, 0, 0, 0.2);
-                
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        #webcam-canvas-container {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            transition: opacity 0.8s ease;
-            transform: scale(1.05); /* Slight scale to hide edges */
-        }
-
-        #webcam-canvas-container.active {
-            opacity: 1;
-        }
-
-        #webcam-canvas-container canvas {
-            width: 100% !important;
-            height: 100% !important;
-            object-fit: cover !important;
-            transform: scaleX(-1);
-            border-radius: 32px;
-        }
-
-        /* Advanced Sci-Fi / iOS Scanner Overlay */
-        .scanner-overlay {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            border-radius: 32px;
-            pointer-events: none;
-            z-index: 5;
-            box-shadow: inset 0 0 0 2px rgba(255,255,255,0.1);
-        }
-
-        .scan-line {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: #ffffff;
-            box-shadow: 
-                0 0 10px #ffffff,
-                0 0 20px #4285F4,
-                0 0 40px #4285F4;
-            opacity: 0;
-            z-index: 6;
-        }
-
-        .camera-frame.scanning .scan-line {
-            opacity: 0.8;
-            animation: iosScanAnim 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-        }
-
-        @keyframes iosScanAnim {
-            0% { top: 0%; opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { top: 100%; opacity: 0; }
-        }
-
-        /* Reticle corners */
-        .reticle {
-            position: absolute;
-            width: 30px;
-            height: 30px;
-            border-color: rgba(255, 255, 255, 0.8);
-            border-style: solid;
-            opacity: 0;
-            transition: opacity 0.5s;
-            z-index: 7;
-        }
-        
-        .camera-frame.scanning .reticle { opacity: 1; }
-
-        .reticle-tl { top: 20px; left: 20px; border-width: 3px 0 0 3px; border-top-left-radius: 8px; }
-        .reticle-tr { top: 20px; right: 20px; border-width: 3px 3px 0 0; border-top-right-radius: 8px; }
-        .reticle-bl { bottom: 20px; left: 20px; border-width: 0 0 3px 3px; border-bottom-left-radius: 8px; }
-        .reticle-br { bottom: 20px; right: 20px; border-width: 0 3px 3px 0; border-bottom-right-radius: 8px; }
-
-        /* Loader inside camera */
-        .loader-overlay {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            z-index: 10;
-            transition: opacity 0.5s ease;
-        }
-
-        .loader-overlay.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .ios-spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid rgba(255,255,255,0.2);
-            border-top-color: #ffffff;
-            border-radius: 50%;
-            animation: iosSpin 1s cubic-bezier(0.5, 0.1, 0.4, 0.9) infinite;
-            margin-bottom: 16px;
-        }
-
-        @keyframes iosSpin {
-            to { transform: rotate(360deg); }
-        }
-
-        .loader-text {
-            color: #ffffff;
-            font-size: 14px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-        }
-
-        /* ==========================================================================
-           RESULTS & LABELS SECTION (Liquid Cards)
-           ========================================================================== */
-        .results-section {
-            flex-grow: 1;
-            padding: 0 24px 24px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            position: relative;
-            z-index: 20;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .results-section::-webkit-scrollbar { width: 0px; }
-
-        .label-card {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-top: 1px solid rgba(255, 255, 255, 0.4);
-            border-left: 1px solid rgba(255, 255, 255, 0.2);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-            border-right: 1px solid rgba(0, 0, 0, 0.1);
-            border-radius: 20px;
-            padding: 16px 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            order: 99;
-        }
-
-        .label-card.active-prediction {
-            background: rgba(255, 255, 255, 0.25);
-            transform: scale(1.02);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.2), inset 0 0 0 1px rgba(255,255,255,0.5);
-        }
-
-        .label-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .label-name {
-            font-size: 16px;
-            font-weight: 700;
-            color: #ffffff;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
-            text-transform: capitalize;
-        }
-
-        .label-confidence {
-            font-size: 15px;
-            font-weight: 800;
-            color: #ffffff;
-            background: rgba(0,0,0,0.2);
-            padding: 4px 10px;
-            border-radius: 12px;
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.3);
-            border: 1px solid rgba(255,255,255,0.1);
-            font-variant-numeric: tabular-nums;
-        }
-
-        .progress-track {
-            width: 100%;
-            height: 10px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 5px;
-            overflow: hidden;
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.5);
-            position: relative;
-        }
-
-        .progress-fill {
-            height: 100%;
-            width: 0%;
-            background: #ffffff;
-            border-radius: 5px;
-            transition: width 0.15s linear, background 0.3s ease;
-            box-shadow: 0 0 10px rgba(255,255,255,0.5);
-        }
-
-        /* Dynamic Google Colored Progress Bars based on Confidence */
-        .confidence-high .progress-fill { 
-            background: linear-gradient(90deg, #34A853, #66bb6a); /* Google Green */
-            box-shadow: 0 0 15px rgba(52, 168, 83, 0.6);
-        }
-        .confidence-high .label-confidence { color: #81c784; }
-
-        .confidence-med .progress-fill { 
-            background: linear-gradient(90deg, #FBBC05, #ffca28); /* Google Yellow */
-            box-shadow: 0 0 15px rgba(251, 188, 5, 0.6);
-        }
-        .confidence-med .label-confidence { color: #ffd54f; }
-
-        .confidence-low .progress-fill { 
-            background: linear-gradient(90deg, #EA4335, #ef5350); /* Google Red */
-            box-shadow: 0 0 15px rgba(234, 67, 53, 0.6);
-        }
-        .confidence-low .label-confidence { color: #e57373; }
-
-        /* ==========================================================================
-           CONTROLS (iOS Glass Buttons)
-           ========================================================================== */
-        .controls-section {
-            padding: 20px 24px 30px;
-            display: flex;
-            justify-content: center;
-            position: relative;
-            z-index: 20;
-            background: linear-gradient(to top, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
-        }
-
-        .btn-ios {
-            width: 100%;
-            max-width: 300px;
-            padding: 18px 24px;
-            border-radius: 24px;
-            
-            /* Glass Button Style */
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-top: 1px solid rgba(255, 255, 255, 0.6);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-            
-            color: #ffffff;
-            font-size: 18px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
-            
-            cursor: pointer;
-            outline: none;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .btn-ios:active {
-            transform: scale(0.95) translateY(2px);
-            background: rgba(255, 255, 255, 0.3);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        .btn-ios:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        /* Status Indicator */
-        .system-status {
+        /* ----------------------------------------------------------------------
+           5. STATUS INDICATOR (TOP RIGHT)
+           ---------------------------------------------------------------------- */
+        .system-status-pill {
             position: absolute;
             top: 24px;
             right: 24px;
             display: flex;
             align-items: center;
             gap: 8px;
-            background: rgba(0,0,0,0.3);
-            backdrop-filter: blur(10px);
-            padding: 6px 12px;
-            border-radius: 20px;
-            border: 1px solid rgba(255,255,255,0.2);
-            z-index: 30;
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 8px 16px;
+            border-radius: var(--radius-xl);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            z-index: 50;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: all var(--transition-normal);
         }
 
-        .status-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: #EA4335;
-            box-shadow: 0 0 10px #EA4335;
-            transition: all 0.3s ease;
+        .status-led {
+            width: 12px;
+            height: 12px;
+            border-radius: var(--radius-round);
+            background: var(--google-red);
+            box-shadow: 0 0 12px var(--google-red);
+            transition: background var(--transition-normal), box-shadow var(--transition-normal);
         }
 
-        .system-status.online .status-dot {
-            background: #34A853;
-            box-shadow: 0 0 10px #34A853;
+        .system-status-pill.online .status-led {
+            background: var(--google-green);
+            box-shadow: 0 0 12px var(--google-green);
         }
 
-        .status-text {
-            color: #fff;
-            font-size: 12px;
-            font-weight: 600;
+        .status-label {
+            color: #ffffff;
+            font-size: var(--font-size-xs);
+            font-weight: var(--font-weight-bold);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
         }
 
-        /* Animations */
-        .fade-in {
-            animation: fadeInAnim 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        /* ----------------------------------------------------------------------
+           6. HEADER TYPOGRAPHY
+           ---------------------------------------------------------------------- */
+        .panel-header {
+            padding: 40px 24px 20px;
+            text-align: center;
+            position: relative;
+            z-index: 20;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+            flex-shrink: 0;
+        }
+
+        .panel-title {
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-weight-extrabold);
+            letter-spacing: -0.03em;
+            color: #ffffff;
+            text-shadow: 0 2px 15px rgba(0,0,0,0.3);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .panel-subtitle {
+            font-size: var(--font-size-sm);
+            color: rgba(255, 255, 255, 0.85);
+            font-weight: var(--font-weight-medium);
+            text-shadow: 0 1px 5px rgba(0,0,0,0.2);
+            letter-spacing: 0.02em;
+        }
+
+        /* ----------------------------------------------------------------------
+           7. CAMERA VIEWPORT AND SCANNER UI
+           ---------------------------------------------------------------------- */
+        .viewport-container {
+            padding: var(--spacing-lg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 20;
+            flex-shrink: 0;
+        }
+
+        .sensor-frame {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            max-width: 320px;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-radius: var(--radius-xl);
+            border-top: 1px solid rgba(0, 0, 0, 0.8);
+            border-left: 1px solid rgba(0, 0, 0, 0.4);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+            border-right: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 
+                inset 0 15px 40px rgba(0, 0, 0, 0.6),
+                0 20px 40px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .webcam-mount-point {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             opacity: 0;
-            transform: translateY(20px);
+            transition: opacity 1s ease;
+            transform: scale(1.02); /* Removes edge bleeding */
         }
 
-        @keyframes fadeInAnim {
-            to { opacity: 1; transform: translateY(0); }
+        .webcam-mount-point.active {
+            opacity: 1;
+        }
+
+        .webcam-mount-point canvas {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
+            transform: scaleX(-1); /* Mirror view for user-facing camera */
+            border-radius: calc(var(--radius-xl) - 2px);
+        }
+
+        /* Sci-Fi Overlay & Scan Line */
+        .scanner-hud {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border-radius: var(--radius-xl);
+            pointer-events: none;
+            z-index: 5;
+            box-shadow: inset 0 0 0 2px rgba(255,255,255,0.1);
+        }
+
+        .laser-sweep {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: #ffffff;
+            box-shadow: 
+                0 0 15px #ffffff,
+                0 0 30px var(--google-blue),
+                0 0 50px var(--google-blue);
+            opacity: 0;
+            z-index: 6;
+        }
+
+        .sensor-frame.scanning .laser-sweep {
+            opacity: 0.8;
+            animation: sweepScan 3.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        }
+
+        @keyframes sweepScan {
+            0% { top: 0%; opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { top: calc(100% - 4px); opacity: 0; }
+        }
+
+        /* Reticle Targeting Corners */
+        .targeting-reticle {
+            position: absolute;
+            width: 35px;
+            height: 35px;
+            border-color: rgba(255, 255, 255, 0.9);
+            border-style: solid;
+            opacity: 0;
+            transition: opacity var(--transition-slow);
+            z-index: 7;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
         }
         
-        .hidden-hard { display: none !important; }
+        .sensor-frame.scanning .targeting-reticle { 
+            opacity: 1; 
+        }
 
+        .targeting-reticle-tl { top: 15px; left: 15px; border-width: 4px 0 0 4px; border-top-left-radius: 12px; }
+        .targeting-reticle-tr { top: 15px; right: 15px; border-width: 4px 4px 0 0; border-top-right-radius: 12px; }
+        .targeting-reticle-bl { bottom: 15px; left: 15px; border-width: 0 0 4px 4px; border-bottom-left-radius: 12px; }
+        .targeting-reticle-br { bottom: 15px; right: 15px; border-width: 0 4px 4px 0; border-bottom-right-radius: 12px; }
+
+        /* Hardware Loader */
+        .hardware-loader {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            z-index: 10;
+            transition: opacity var(--transition-slow);
+        }
+
+        .hardware-loader.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .circular-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255,255,255,0.1);
+            border-top-color: #ffffff;
+            border-radius: var(--radius-round);
+            animation: spinAction 1s cubic-bezier(0.5, 0.1, 0.4, 0.9) infinite;
+            margin-bottom: var(--spacing-md);
+        }
+
+        @keyframes spinAction {
+            to { transform: rotate(360deg); }
+        }
+
+        .loader-message {
+            color: #ffffff;
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-semibold);
+            letter-spacing: 0.05em;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.6);
+        }
+
+        /* ----------------------------------------------------------------------
+           8. RESULTS & DYNAMIC LABELS (Ensuring full visibility)
+           ---------------------------------------------------------------------- */
+        .metrics-dashboard {
+            flex-grow: 1;
+            padding: 0 var(--spacing-lg) var(--spacing-lg);
+            /* Modified to ensure ALL items are visible always, flex sizing */
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* Centered in available space */
+            gap: var(--spacing-md);
+            position: relative;
+            z-index: 20;
+            overflow: visible; /* Prevent hiding */
+            min-height: 180px; /* Ensure space for at least 2 cards */
+        }
+
+        .classification-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-top: 1px solid rgba(255, 255, 255, 0.5);
+            border-left: 1px solid rgba(255, 255, 255, 0.3);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+            border-right: 1px solid rgba(0, 0, 0, 0.15);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-md) var(--spacing-lg);
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            order: 99;
+            flex-shrink: 0; /* Ensures cards do not get crushed */
+            width: 100%;
+        }
+
+        .classification-card.prime-candidate {
+            background: rgba(255, 255, 255, 0.28);
+            transform: scale(1.03);
+            box-shadow: 
+                0 20px 40px rgba(0,0,0,0.25), 
+                inset 0 0 0 1px rgba(255,255,255,0.6);
+            z-index: 2;
+        }
+
+        .card-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .class-title-text {
+            font-size: var(--font-size-md);
+            font-weight: var(--font-weight-bold);
+            color: #ffffff;
+            text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+            text-transform: capitalize;
+            letter-spacing: 0.02em;
+        }
+
+        .confidence-badge {
+            font-size: var(--font-size-md);
+            font-weight: var(--font-weight-extrabold);
+            color: #ffffff;
+            background: rgba(0,0,0,0.25);
+            padding: 4px 12px;
+            border-radius: var(--radius-md);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.15);
+            font-variant-numeric: tabular-nums;
+            min-width: 70px;
+            text-align: right;
+        }
+
+        .meter-track {
+            width: 100%;
+            height: 12px;
+            background: rgba(0, 0, 0, 0.35);
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.6);
+            position: relative;
+        }
+
+        .meter-fill-bar {
+            height: 100%;
+            width: 0%;
+            background: #ffffff;
+            border-radius: 6px;
+            transition: width 0.15s linear, background-image 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 0 12px rgba(255,255,255,0.6);
+        }
+
+        /* Dynamic Google Colored Progress Bars based on Confidence Hierarchy */
+        .tier-high .meter-fill-bar { 
+            background-image: linear-gradient(90deg, var(--google-green), #66bb6a); 
+            box-shadow: 0 0 18px rgba(52, 168, 83, 0.7);
+        }
+        .tier-high .confidence-badge { color: #81c784; }
+
+        .tier-med .meter-fill-bar { 
+            background-image: linear-gradient(90deg, var(--google-yellow), #ffca28); 
+            box-shadow: 0 0 18px rgba(251, 188, 5, 0.7);
+        }
+        .tier-med .confidence-badge { color: #ffd54f; }
+
+        .tier-low .meter-fill-bar { 
+            background-image: linear-gradient(90deg, var(--google-red), #ef5350); 
+            box-shadow: 0 0 18px rgba(234, 67, 53, 0.7);
+        }
+        .tier-low .confidence-badge { color: #e57373; }
+
+        /* ----------------------------------------------------------------------
+           9. CONTROL INTERFACE
+           ---------------------------------------------------------------------- */
+        .action-tray {
+            padding: var(--spacing-md) var(--spacing-lg) var(--spacing-xl);
+            display: flex;
+            justify-content: center;
+            position: relative;
+            z-index: 20;
+            background: linear-gradient(to top, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0) 100%);
+            flex-shrink: 0;
+        }
+
+        .glass-button-primary {
+            width: 100%;
+            max-width: 320px;
+            padding: 20px 24px;
+            border-radius: var(--radius-xl);
+            
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-top: 1px solid rgba(255, 255, 255, 0.7);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+            
+            color: #ffffff;
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-bold);
+            letter-spacing: 0.03em;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            
+            cursor: pointer;
+            outline: none;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+            transition: all var(--transition-bounce);
+            
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .glass-button-primary:active {
+            transform: scale(0.94) translateY(3px);
+            background: rgba(255, 255, 255, 0.35);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+        }
+
+        .glass-button-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* ----------------------------------------------------------------------
+           10. ANIMATION UTILITIES
+           ---------------------------------------------------------------------- */
+        .anim-fade-rise {
+            animation: fadeRise sequence-timing forwards;
+            opacity: 0;
+            transform: translateY(25px);
+        }
+
+        @keyframes fadeRise {
+            0% {
+                opacity: 0;
+                transform: translateY(25px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .display-none-override { 
+            display: none !important; 
+        }
+
+        /* Responsive height fixes for smaller screens */
+        @media (max-height: 700px) {
+            .sensor-frame {
+                max-width: 250px;
+            }
+            .panel-header {
+                padding-top: 20px;
+            }
+        }
     </style>
 </head>
 <body>
 
-    <!-- CSS Animated Google Colors Background -->
-    <div class="google-gradient-bg"></div>
+    <!-- DOM: Background Environment -->
+    <div class="ambient-environment" id="bg-engine"></div>
+    
+    <!-- DOM: Liquid Light Orbs -->
+    <div class="ambient-orb ambient-orb-primary"></div>
+    <div class="ambient-orb ambient-orb-secondary"></div>
+    <div class="ambient-orb ambient-orb-tertiary"></div>
 
-    <!-- Ambient Orbs for Liquid Light Reflections -->
-    <div class="light-orb orb-blue"></div>
-    <div class="light-orb orb-red"></div>
-    <div class="light-orb orb-yellow"></div>
-
-    <div class="app-wrapper" id="parallax-wrapper">
-        <main class="liquid-glass-panel" id="main-panel">
+    <!-- DOM: Main Application Container -->
+    <div class="application-root" id="app-root">
+        
+        <!-- DOM: Glass Chassis -->
+        <main class="liquid-glass-chassis" id="chassis">
             
-            <div class="system-status" id="sys-status">
-                <div class="status-dot"></div>
-                <span class="status-text" id="sys-status-text">Standby</span>
+            <!-- System Status -->
+            <div class="system-status-pill" id="indicator-pill">
+                <div class="status-led"></div>
+                <span class="status-label" id="indicator-text">Idle</span>
             </div>
 
-            <header class="header fade-in" style="animation-delay: 0.1s;">
-                <h1>CoreVision AI</h1>
-                <p>Neural Image Classification Engine</p>
+            <!-- Header -->
+            <header class="panel-header anim-fade-rise" style="animation-duration: 0.7s; animation-delay: 0.1s;">
+                <h1 class="panel-title">CoreVision AI</h1>
+                <p class="panel-subtitle">Neural Image Classification Engine</p>
             </header>
 
-            <section class="viewport-section fade-in" style="animation-delay: 0.2s;">
-                <div class="camera-frame" id="camera-frame">
+            <!-- Camera Viewport Section -->
+            <section class="viewport-container anim-fade-rise" style="animation-duration: 0.7s; animation-delay: 0.2s;">
+                <div class="sensor-frame" id="sensor-frame">
                     
-                    <div class="loader-overlay" id="loader-overlay">
-                        <div class="ios-spinner"></div>
-                        <p class="loader-text" id="loader-msg">Booting Tensor Cores...</p>
+                    <!-- Hardware Booting Overlay -->
+                    <div class="hardware-loader" id="overlay-loader">
+                        <div class="circular-spinner"></div>
+                        <p class="loader-message" id="overlay-message">Allocating Tensor Cores...</p>
                     </div>
                     
-                    <div class="scanner-overlay">
-                        <div class="scan-line"></div>
-                        <div class="reticle reticle-tl"></div>
-                        <div class="reticle reticle-tr"></div>
-                        <div class="reticle reticle-bl"></div>
-                        <div class="reticle reticle-br"></div>
+                    <!-- Sci-Fi Scanner Elements -->
+                    <div class="scanner-hud">
+                        <div class="laser-sweep"></div>
+                        <div class="targeting-reticle targeting-reticle-tl"></div>
+                        <div class="targeting-reticle targeting-reticle-tr"></div>
+                        <div class="targeting-reticle targeting-reticle-bl"></div>
+                        <div class="targeting-reticle targeting-reticle-br"></div>
                     </div>
 
-                    <div id="webcam-canvas-container"></div>
+                    <!-- Video Stream Mount -->
+                    <div class="webcam-mount-point" id="video-mount"></div>
                 </div>
             </section>
 
-            <section class="results-section fade-in" id="results-container" style="animation-delay: 0.3s;">
-                <!-- Skeleton UI to establish layout -->
-                <div class="label-card" style="opacity: 0.5;">
-                    <div class="label-header">
-                        <span class="label-name" style="background: rgba(255,255,255,0.2); color: transparent; border-radius: 4px;">Loading Data</span>
-                        <span class="label-confidence" style="background: transparent; border: none; color: transparent;">0.0%</span>
+            <!-- Results Dashboard Section -->
+            <!-- Ensures tags are always visible via flexbox layout -->
+            <section class="metrics-dashboard anim-fade-rise" id="metrics-dashboard" style="animation-duration: 0.7s; animation-delay: 0.3s;">
+                <!-- Placeholder Skeleton Cards (Will be replaced dynamically) -->
+                <article class="classification-card" style="opacity: 0.4;">
+                    <div class="card-header-row">
+                        <span class="class-title-text" style="background: rgba(255,255,255,0.2); color: transparent; border-radius: 4px;">Initialize Model</span>
+                        <span class="confidence-badge" style="background: transparent; border: none; color: transparent;">0.0%</span>
                     </div>
-                    <div class="progress-track"><div class="progress-fill" style="width: 0%;"></div></div>
-                </div>
+                    <div class="meter-track"><div class="meter-fill-bar" style="width: 0%;"></div></div>
+                </article>
+                <article class="classification-card" style="opacity: 0.2;">
+                    <div class="card-header-row">
+                        <span class="class-title-text" style="background: rgba(255,255,255,0.2); color: transparent; border-radius: 4px;">Initialize Model</span>
+                        <span class="confidence-badge" style="background: transparent; border: none; color: transparent;">0.0%</span>
+                    </div>
+                    <div class="meter-track"><div class="meter-fill-bar" style="width: 0%;"></div></div>
+                </article>
             </section>
 
-            <section class="controls-section fade-in" style="animation-delay: 0.4s;">
-                <button class="btn-ios" id="start-btn">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <polygon points="10 8 16 12 10 16 10 8"></polygon>
+            <!-- Controls Section -->
+            <section class="action-tray anim-fade-rise" style="animation-duration: 0.7s; animation-delay: 0.4s;">
+                <button class="glass-button-primary" id="btn-ignite">
+                    <!-- Inline SVG Icon for precision and speed -->
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
                     </svg>
-                    <span>Initialize Camera</span>
+                    <span>Ignite Engine</span>
                 </button>
             </section>
 
         </main>
     </div>
 
-    <!-- ==========================================================================
-         JAVASCRIPT APPLICATION LOGIC
-         ========================================================================== -->
+    <!-- 
+      ==========================================================================
+      JAVASCRIPT ARCHITECTURE & MACHINE LEARNING INTEGRATION
+      ========================================================================== 
+    -->
     <script>
         /**
-         * System Configuration
+         * ======================================================================
+         * CORE CONFIGURATION REGISTRY
+         * Defines the bounds and tuning parameters for the machine learning model
+         * ======================================================================
          */
-        const CONFIG = {
-            MODEL_URL: "https://teachablemachine.withgoogle.com/models/DPuAl5UGa/",
-            RESOLUTION: 224, // Optimized standard size for MobileNet
-            THRESHOLDS: {
-                HIGH: 0.85,
-                MED: 0.40
+        const AppConfiguration = {
+            // Teachable Machine Published Link Endpoint
+            NetworkEndpoint: "https://teachablemachine.withgoogle.com/models/DPuAl5UGa/",
+            
+            // Optical Sensor Resolution Constraints
+            SensorWidth: 224, 
+            SensorHeight: 224,
+            
+            // Classification Categorization Thresholds
+            Thresholds: {
+                AlphaTier: 0.85,
+                BetaTier: 0.40
             },
-            MAX_FPS: 60
+            
+            // Software Execution Timing bounds
+            TargetFPS: 60,
+            
+            // Logging verbosity level (0=silence, 1=errors, 2=info, 3=debug)
+            LogLevel: 2
         };
 
         /**
-         * Global Application State
+         * ======================================================================
+         * STATE MANAGEMENT SYSTEM
+         * Centralized store for volatile runtime variables
+         * ======================================================================
          */
-        const STATE = {
-            model: null,
-            webcam: null,
-            maxClasses: 0,
-            classLabels: [],
-            isRunning: false,
-            rafId: null,
-            lastFrameTime: 0,
-            uiElements: {}
+        const RuntimeState = {
+            NeuralModel: null,
+            HardwareSensor: null,
+            ClassCount: 0,
+            ClassIdentifiers: [],
+            EngineRunning: false,
+            RenderSequenceID: null,
+            TimestampLastFrame: 0,
+            DOMNodes: {} // O(1) Access mapping for high-frequency updates
         };
 
         /**
-         * DOM Node References
+         * ======================================================================
+         * DOM NODE CACHE REGISTRY
+         * Caching DOM queries to prevent layout thrashing and slow lookups
+         * ======================================================================
          */
-        const DOM = {
-            startBtn: document.getElementById('start-btn'),
-            loaderOverlay: document.getElementById('loader-overlay'),
-            loaderMsg: document.getElementById('loader-msg'),
-            webcamContainer: document.getElementById('webcam-canvas-container'),
-            resultsContainer: document.getElementById('results-container'),
-            sysStatus: document.getElementById('sys-status'),
-            sysStatusText: document.getElementById('sys-status-text'),
-            cameraFrame: document.getElementById('camera-frame'),
-            parallaxWrapper: document.getElementById('parallax-wrapper'),
-            mainPanel: document.getElementById('main-panel')
+        const InterfaceCache = {
+            ActionTrigger: document.getElementById('btn-ignite'),
+            HUDLoaderOverlay: document.getElementById('overlay-loader'),
+            HUDLoaderMessage: document.getElementById('overlay-message'),
+            VideoMountPoint: document.getElementById('video-mount'),
+            DashboardContainer: document.getElementById('metrics-dashboard'),
+            StatusPill: document.getElementById('indicator-pill'),
+            StatusText: document.getElementById('indicator-text'),
+            SensorFrame: document.getElementById('sensor-frame')
         };
 
         /**
-         * Core Initialization Sequence
+         * ======================================================================
+         * UTILITY LIBRARIES
+         * Helper functions for formatting, sanitization, and logging
+         * ======================================================================
          */
-        async function bootSequence() {
-            if (STATE.isRunning) return;
-            
-            try {
-                updateUIState(true, "Downloading Neural Weights...");
-                
-                // 1. Model Loading Phase
-                const modelURL = CONFIG.MODEL_URL + "model.json";
-                const metadataURL = CONFIG.MODEL_URL + "metadata.json";
-                
-                STATE.model = await tmImage.load(modelURL, metadataURL);
-                STATE.maxClasses = STATE.model.getTotalClasses();
-                STATE.classLabels = STATE.model.getClassLabels();
-                
-                updateUIState(true, "Requesting Hardware Access...");
-                
-                // 2. Hardware Initialization Phase
-                STATE.webcam = new tmImage.Webcam(CONFIG.RESOLUTION, CONFIG.RESOLUTION, true);
-                await STATE.webcam.setup({ facingMode: "user" }); 
-                
-                updateUIState(true, "Synchronizing Streams...");
-                await STATE.webcam.play();
-                
-                // 3. DOM Mounting Phase
-                DOM.webcamContainer.innerHTML = ''; // Clear any existing
-                DOM.webcamContainer.appendChild(STATE.webcam.canvas);
-                
-                // 4. UI Generation Phase
-                constructLiquidCards(STATE.classLabels);
-                
-                // 5. Final Activation
-                STATE.isRunning = true;
-                updateUIState(false);
-                setSystemOnline(true);
-                DOM.cameraFrame.classList.add('scanning');
-                
-                // 6. Enter Execution Loop
-                STATE.rafId = window.requestAnimationFrame(tensorExecutionLoop);
+        const Utilities = {
+            /**
+             * Formats a raw floating point probability into a UX-friendly string
+             * @param {number} probability - Raw float from 0.0 to 1.0
+             * @returns {string} - Formatted percentage (e.g. "98.5%")
+             */
+            FormatProbability: (probability) => {
+                return (probability * 100).toFixed(1) + "%";
+            },
 
-            } catch (error) {
-                console.error("Boot Sequence Failure:", error);
-                updateUIState(false);
-                setSystemOnline(false);
-                alert("Hardware access denied or network failure. Please grant camera permissions and ensure a stable connection.");
-                
-                DOM.startBtn.disabled = false;
-                DOM.startBtn.innerHTML = `
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M21.5 2v6h-6M2.13 15.57a10 10 0 1 0 3.43-5.35l-5.32 5.35"></path>
-                    </svg>
-                    <span>Reboot System</span>
-                `;
-            }
-        }
+            /**
+             * Cleans arbitrary class names into safe CSS/HTML selectors
+             * @param {string} rawIdentifier - Unsafe string
+             * @returns {string} - Safe lowercase string
+             */
+            SanitizeIdentifier: (rawIdentifier) => {
+                return rawIdentifier.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase();
+            },
 
-        /**
-         * Continuous Execution Loop (Awaited to prevent main thread blocking)
-         */
-        async function tensorExecutionLoop(timestamp) {
-            if (!STATE.isRunning) return;
-
-            // Frame rate limiter (optional safety feature)
-            const elapsed = timestamp - STATE.lastFrameTime;
-            const fpsInterval = 1000 / CONFIG.MAX_FPS;
-
-            if (elapsed > fpsInterval) {
-                STATE.lastFrameTime = timestamp - (elapsed % fpsInterval);
-                
-                STATE.webcam.update(); 
-                await processInference(); 
-            }
-            
-            STATE.rafId = window.requestAnimationFrame(tensorExecutionLoop);
-        }
-
-        /**
-         * Frame Inference and DOM Mapping
-         */
-        async function processInference() {
-            if (!STATE.model || !STATE.webcam) return;
-
-            const predictions = await STATE.model.predict(STATE.webcam.canvas);
-            
-            for (let i = 0; i < STATE.maxClasses; i++) {
-                const pred = predictions[i];
-                const cleanID = sanitizeID(pred.className);
-                const probability = pred.probability;
-                const percentageStr = (probability * 100).toFixed(1);
-                
-                const ui = STATE.uiElements[cleanID];
-                if (!ui) continue;
-
-                // Update Values
-                ui.text.innerText = `${percentageStr}%`;
-                ui.fill.style.width = `${percentageStr}%`;
-
-                // Wipe previous state classes
-                ui.card.classList.remove('confidence-high', 'confidence-med', 'confidence-low', 'active-prediction');
-                
-                // Apply contextual liquid styling
-                if (probability >= CONFIG.THRESHOLDS.HIGH) {
-                    ui.card.classList.add('confidence-high', 'active-prediction');
-                    ui.card.style.order = 1; 
-                } else if (probability >= CONFIG.THRESHOLDS.MED) {
-                    ui.card.classList.add('confidence-med');
-                    ui.card.style.order = 2;
-                } else {
-                    ui.card.classList.add('confidence-low');
-                    ui.card.style.order = 3;
+            /**
+             * Internal system logger wrapper
+             * @param {number} level - Message severity
+             * @param {string} context - Log context
+             * @param {any} payload - Optional data
+             */
+            Log: (level, context, payload = null) => {
+                if (level <= AppConfiguration.LogLevel) {
+                    const ts = new Date().toISOString();
+                    const prefix = `[CoreVision:${ts}] [${context}]`;
+                    if (level === 1) console.error(prefix, payload || '');
+                    if (level === 2) console.info(prefix, payload || '');
+                    if (level === 3) console.debug(prefix, payload || '');
                 }
             }
-        }
+        };
 
         /**
-         * Constructs the Liquid Glass UI Cards dynamically
+         * ======================================================================
+         * SYSTEM BOOTSTRAPPER SEQUENCE
+         * Orchestrates the initialization of the ML network and camera hardware
+         * ======================================================================
          */
-        function constructLiquidCards(labels) {
-            DOM.resultsContainer.innerHTML = ''; 
-            STATE.uiElements = {}; 
-
-            labels.forEach((label, index) => {
-                const cleanID = sanitizeID(label);
+        const SystemBootstrapper = async () => {
+            if (RuntimeState.EngineRunning) return;
+            
+            try {
+                Utilities.Log(2, "BootSequence", "Initiating System Startup...");
+                UpdateInterfaceState(true, "Synchronizing Neural Weights...");
                 
-                // Outer Card
-                const card = document.createElement('div');
-                card.className = 'label-card fade-in';
-                card.id = `card-${cleanID}`;
-                card.style.animationDelay = `${(index * 0.1) + 0.1}s`;
+                // 1. Fetch Neural Network Topologies and Weights
+                const topologyURL = AppConfiguration.NetworkEndpoint + "model.json";
+                const schemaURL = AppConfiguration.NetworkEndpoint + "metadata.json";
+                
+                RuntimeState.NeuralModel = await tmImage.load(topologyURL, schemaURL);
+                RuntimeState.ClassCount = RuntimeState.NeuralModel.getTotalClasses();
+                RuntimeState.ClassIdentifiers = RuntimeState.NeuralModel.getClassLabels();
+                
+                Utilities.Log(2, "BootSequence", `Model Loaded successfully. Total Classes: ${RuntimeState.ClassCount}`);
+                
+                UpdateInterfaceState(true, "Negotiating Hardware Access...");
+                
+                // 2. Instantiate Optical Hardware Interface
+                const mirrorOutput = true; 
+                RuntimeState.HardwareSensor = new tmImage.Webcam(
+                    AppConfiguration.SensorWidth, 
+                    AppConfiguration.SensorHeight, 
+                    mirrorOutput
+                );
+                
+                // Invoke browser prompt for camera access (Mobile optimized facingMode)
+                await RuntimeState.HardwareSensor.setup({ facingMode: "user" }); 
+                
+                UpdateInterfaceState(true, "Buffering Video Streams...");
+                await RuntimeState.HardwareSensor.play();
+                
+                // 3. Inject Canvas into the DOM safely
+                InterfaceCache.VideoMountPoint.innerHTML = ''; 
+                InterfaceCache.VideoMountPoint.appendChild(RuntimeState.HardwareSensor.canvas);
+                
+                // 4. Generate the Classification UI Graph dynamically
+                BuildClassificationGraph(RuntimeState.ClassIdentifiers);
+                
+                // 5. Finalize State and Activate Engine
+                RuntimeState.EngineRunning = true;
+                UpdateInterfaceState(false);
+                ToggleSystemReadiness(true);
+                InterfaceCache.SensorFrame.classList.add('scanning');
+                
+                Utilities.Log(2, "BootSequence", "Startup Complete. Handing off to Tensor Execution Loop.");
+                
+                // 6. Enter Main Thread Rendering Loop
+                RuntimeState.RenderSequenceID = window.requestAnimationFrame(TensorExecutionLoop);
 
-                // Header Area
-                const header = document.createElement('div');
-                header.className = 'label-header';
+            } catch (systemException) {
+                Utilities.Log(1, "BootSequence Failure", systemException);
+                
+                UpdateInterfaceState(false);
+                ToggleSystemReadiness(false);
+                
+                // Alerting user of failure
+                alert("Critical System Fault: Hardware access was denied or the network model failed to load. Please verify permissions and HTTPS connection.");
+                
+                // Reset Ignition Trigger for Retry
+                InterfaceCache.ActionTrigger.disabled = false;
+                InterfaceCache.ActionTrigger.innerHTML = `
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21.5 2v6h-6M2.13 15.57a10 10 0 1 0 3.43-5.35l-5.32 5.35"></path>
+                    </svg>
+                    <span>Reboot Engine</span>
+                `;
+            }
+        };
 
-                const nameEl = document.createElement('span');
-                nameEl.className = 'label-name';
-                nameEl.innerText = label;
+        /**
+         * ======================================================================
+         * CORE EXECUTION LOOP
+         * Self-calling high-frequency rendering loop. 
+         * Async/Await pattern forces the main thread to breathe between frames.
+         * ======================================================================
+         */
+        const TensorExecutionLoop = async (performanceTimestamp) => {
+            if (!RuntimeState.EngineRunning) return;
 
-                const confEl = document.createElement('span');
-                confEl.className = 'label-confidence';
-                confEl.id = `conf-${cleanID}`;
-                confEl.innerText = '0.0%';
+            // Optional Frame Delta Limiter logic
+            const timeElapsed = performanceTimestamp - RuntimeState.TimestampLastFrame;
+            const thresholdDelta = 1000 / AppConfiguration.TargetFPS;
 
-                header.appendChild(nameEl);
-                header.appendChild(confEl);
+            if (timeElapsed > thresholdDelta) {
+                // Adjust timestamp to catch up smoothly
+                RuntimeState.TimestampLastFrame = performanceTimestamp - (timeElapsed % thresholdDelta);
+                
+                // Request next frame from hardware
+                RuntimeState.HardwareSensor.update(); 
+                
+                // Hand over to ML processing block
+                await ComputeInferenceMatrix(); 
+            }
+            
+            // Recurse execution
+            RuntimeState.RenderSequenceID = window.requestAnimationFrame(TensorExecutionLoop);
+        };
 
-                // Progress Area
-                const track = document.createElement('div');
-                track.className = 'progress-track';
+        /**
+         * ======================================================================
+         * INFERENCE COMPUTATION
+         * Evaluates current frame against the model and maps results to the DOM
+         * ======================================================================
+         */
+        const ComputeInferenceMatrix = async () => {
+            // Null safety check
+            if (!RuntimeState.NeuralModel || !RuntimeState.HardwareSensor) return;
 
-                const fill = document.createElement('div');
-                fill.className = 'progress-fill';
-                fill.id = `fill-${cleanID}`;
+            // Execute prediction matrix against current canvas buffer
+            const rawPredictions = await RuntimeState.NeuralModel.predict(RuntimeState.HardwareSensor.canvas);
+            
+            // Iterate over generated probabilities
+            for (let index = 0; index < RuntimeState.ClassCount; index++) {
+                const currentPrediction = rawPredictions[index];
+                const cleanKey = Utilities.SanitizeIdentifier(currentPrediction.className);
+                const floatProbability = currentPrediction.probability;
+                const formattedString = Utilities.FormatProbability(floatProbability);
+                
+                // Retrieve mapped DOM nodes from memory cache
+                const activeUI = RuntimeState.DOMNodes[cleanKey];
+                
+                // Skip if mapping failed
+                if (!activeUI) continue;
 
-                track.appendChild(fill);
+                // 1. Text & Graph Update
+                activeUI.NodeText.innerText = formattedString;
+                activeUI.NodeFill.style.width = formattedString;
 
-                // Assembly
-                card.appendChild(header);
-                card.appendChild(track);
-                DOM.resultsContainer.appendChild(card);
+                // 2. Volumetric Styling Update
+                // Clear existing tier classes
+                activeUI.NodeCard.classList.remove('tier-high', 'tier-med', 'tier-low', 'prime-candidate');
+                
+                // Apply contextual visual representation based on established thresholds
+                if (floatProbability >= AppConfiguration.Thresholds.AlphaTier) {
+                    activeUI.NodeCard.classList.add('tier-high', 'prime-candidate');
+                    activeUI.NodeCard.style.order = 1; // Bubble to top priority
+                } 
+                else if (floatProbability >= AppConfiguration.Thresholds.BetaTier) {
+                    activeUI.NodeCard.classList.add('tier-med');
+                    activeUI.NodeCard.style.order = 2; // Mid priority
+                } 
+                else {
+                    activeUI.NodeCard.classList.add('tier-low');
+                    activeUI.NodeCard.style.order = 3; // Bottom priority
+                }
+            }
+        };
 
-                // Cache for O(1) loop access
-                STATE.uiElements[cleanID] = {
-                    card: card,
-                    text: confEl,
-                    fill: fill
+        /**
+         * ======================================================================
+         * DYNAMIC USER INTERFACE GENERATOR
+         * Constructs the classification dashboard dynamically from the fetched metadata.
+         * Ensures visibility by avoiding scroll hiding (using flex sizing).
+         * ======================================================================
+         */
+        const BuildClassificationGraph = (classLabelArray) => {
+            Utilities.Log(2, "UIBuilder", "Constructing DOM Nodes for Categories...");
+            
+            // Purge skeletal placeholders
+            InterfaceCache.DashboardContainer.innerHTML = ''; 
+            
+            // Reset lookup dictionary
+            RuntimeState.DOMNodes = {}; 
+
+            classLabelArray.forEach((categoryName, offset) => {
+                const sanitizedKey = Utilities.SanitizeIdentifier(categoryName);
+                
+                // Node: Outer Container Article
+                const nodeCard = document.createElement('article');
+                nodeCard.className = 'classification-card anim-fade-rise';
+                nodeCard.id = `card-graph-${sanitizedKey}`;
+                // Stagger animations based on index for smooth cascade effect
+                nodeCard.style.animationDelay = `${(offset * 0.15) + 0.1}s`;
+
+                // Node: Title & Data Row
+                const nodeHeader = document.createElement('div');
+                nodeHeader.className = 'card-header-row';
+
+                // Node: Categorization Title
+                const nodeTitle = document.createElement('span');
+                nodeTitle.className = 'class-title-text';
+                nodeTitle.innerText = categoryName;
+
+                // Node: Confidence Numerical Output
+                const nodeConfidence = document.createElement('span');
+                nodeConfidence.className = 'confidence-badge';
+                nodeConfidence.id = `data-val-${sanitizedKey}`;
+                nodeConfidence.innerText = '0.0%';
+
+                // Assemble Row
+                nodeHeader.appendChild(nodeTitle);
+                nodeHeader.appendChild(nodeConfidence);
+
+                // Node: Graphical Meter Container
+                const nodeTrack = document.createElement('div');
+                nodeTrack.className = 'meter-track';
+
+                // Node: Graphical Meter Fill Indicator
+                const nodeFill = document.createElement('div');
+                nodeFill.className = 'meter-fill-bar';
+                nodeFill.id = `data-fill-${sanitizedKey}`;
+
+                // Assemble Graph
+                nodeTrack.appendChild(nodeFill);
+
+                // Finalize Card Assembly
+                nodeCard.appendChild(nodeHeader);
+                nodeCard.appendChild(nodeTrack);
+                
+                // Inject to live DOM
+                InterfaceCache.DashboardContainer.appendChild(nodeCard);
+
+                // Populate fast-access Memory Cache for execution loop
+                RuntimeState.DOMNodes[sanitizedKey] = {
+                    NodeCard: nodeCard,
+                    NodeText: nodeConfidence,
+                    NodeFill: nodeFill
                 };
             });
-        }
+            
+            Utilities.Log(2, "UIBuilder", "Graph Construction complete.");
+        };
 
         /**
-         * Helper: Sanitize strings for DOM IDs
+         * ======================================================================
+         * INTERFACE STATE MUTATORS
+         * Helpers that control broad visual states of the application
+         * ======================================================================
          */
-        function sanitizeID(str) {
-            return str.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase();
-        }
 
         /**
-         * Helper: Manage Loading Overlay States
+         * Toggles the central overlay loading screen
+         * @param {boolean} active - Should the loader show
+         * @param {string} payloadMessage - Accompanying message
          */
-        function updateUIState(isLoading, message = "") {
-            if (isLoading) {
-                DOM.startBtn.disabled = true;
-                DOM.startBtn.innerHTML = `
-                    <div class="ios-spinner" style="width: 24px; height: 24px; margin: 0; border-width: 2px;"></div>
+        const UpdateInterfaceState = (active, payloadMessage = "") => {
+            if (active) {
+                // Disable trigger and show internal spinner
+                InterfaceCache.ActionTrigger.disabled = true;
+                InterfaceCache.ActionTrigger.innerHTML = `
+                    <div class="circular-spinner" style="width: 24px; height: 24px; margin: 0; border-width: 2px;"></div>
                     <span>Initializing...</span>
                 `;
-                DOM.loaderOverlay.classList.remove('hidden');
-                DOM.loaderMsg.innerText = message;
+                
+                // Present Overlay
+                InterfaceCache.HUDLoaderOverlay.classList.remove('hidden');
+                InterfaceCache.HUDLoaderMessage.innerText = payloadMessage;
             } else {
-                DOM.loaderOverlay.classList.add('hidden');
-                DOM.startBtn.classList.add('hidden-hard');
-                DOM.webcamContainer.classList.add('active');
+                // Hide Overlay
+                InterfaceCache.HUDLoaderOverlay.classList.add('hidden');
+                
+                // Completely remove ignite button from layout
+                InterfaceCache.ActionTrigger.classList.add('display-none-override');
+                
+                // Reveal Active Canvas Viewport
+                InterfaceCache.VideoMountPoint.classList.add('active');
             }
-        }
+        };
 
         /**
-         * Helper: System Status Indicator
+         * Updates the global system telemetry pill in the corner
+         * @param {boolean} systemNominal - Represents successful startup
          */
-        function setSystemOnline(isOnline) {
-            if (isOnline) {
-                DOM.sysStatus.classList.add('online');
-                DOM.sysStatusText.innerText = 'System Online';
+        const ToggleSystemReadiness = (systemNominal) => {
+            if (systemNominal) {
+                InterfaceCache.StatusPill.classList.add('online');
+                InterfaceCache.StatusText.innerText = 'System Active';
             } else {
-                DOM.sysStatus.classList.remove('online');
-                DOM.sysStatusText.innerText = 'System Offline';
+                InterfaceCache.StatusPill.classList.remove('online');
+                InterfaceCache.StatusText.innerText = 'System Fault';
             }
-        }
+        };
 
         /**
-         * Optional: Subtle Parallax Effect for Liquid Glass
-         * Tracks mouse movement on desktop to tilt the glass panel slightly
+         * ======================================================================
+         * HARDWARE EVENT LISTENERS
+         * Binds logic to user interaction points
+         * ======================================================================
          */
-        DOM.parallaxWrapper.addEventListener('mousemove', (e) => {
-            if (window.innerWidth < 768) return; // Disable on mobile to save battery
-            
-            const xAxis = (window.innerWidth / 2 - e.pageX) / 25;
-            const yAxis = (window.innerHeight / 2 - e.pageY) / 25;
-            
-            DOM.mainPanel.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
-        });
+        
+        // Bind primary ignition logic to action tray trigger
+        InterfaceCache.ActionTrigger.addEventListener('click', SystemBootstrapper);
 
-        DOM.parallaxWrapper.addEventListener('mouseleave', () => {
-            DOM.mainPanel.style.transform = `rotateY(0deg) rotateX(0deg)`;
+        // Security / Polish: Stop the stream gracefully if user backgrounds or unloads page
+        window.addEventListener('beforeunload', () => {
+            if (RuntimeState.HardwareSensor && RuntimeState.HardwareSensor.stop) {
+                RuntimeState.HardwareSensor.stop();
+            }
         });
-
-        // Event Listener Attachment
-        DOM.startBtn.addEventListener('click', bootSequence);
 
     </script>
 </body>
