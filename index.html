@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>AI Vision - Teachable Machine</title>
+    
+    <!-- TensorFlow.js and Teachable Machine Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
+
+    <style>
+        /* 
+         * ==========================================================================
+         * ADVANCED IOS GLASSMORPHISM STYLESHEET
+         * ==========================================================================
+         */
+        
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.15);
+            --glass-border: rgba(255, 255, 255, 0.3);
+            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            --glass-blur: blur(20px);
+            --ios-blue: #007AFF;
+            --ios-green: #34C759;
+            --ios-bg-gradient: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            --text-primary: #FFFFFF;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body, html {
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            background: var(--ios-bg-gradient);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Abstract Background Elements for Glassmorphism contrast */
+        .bg-shape {
+            position: absolute;
+            filter: blur(80px);
+            z-index: 0;
+            border-radius: 50%;
+            animation: float 10s infinite ease-in-out alternate;
+        }
+
+        .shape1 {
+            width: 300px; height: 300px;
+            background: rgba(0, 122, 255, 0.6);
+            top: -100px; left: -100px;
+        }
+
+        .shape2 {
+            width: 400px; height: 400px;
+            background: rgba(52, 199, 89, 0.4);
+            bottom: -150px; right: -100px;
+            animation-delay: -5s;
+        }
+
+        /* Main Application Container */
+        .app-container {
+            position: relative;
+            z-index: 10;
+            width: 90%;
+            max-width: 500px;
+            height: 90%;
+            max-height: 850px;
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border-radius: 40px;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            padding: 20px;
+        }
+
+        /* Header UI */
+        .header {
+            text-align: center;
+            padding: 15px 0 25px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            color: var(--text-primary);
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .header p {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        /* Camera Viewport */
+        .camera-container {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 3/4;
+            border-radius: 25px;
+            overflow: hidden;
+            background: rgba(0,0,0,0.3);
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        #webcam-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        canvas {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
+            transform: scaleX(-1); /* Mirror effect like standard iOS camera */
+        }
+
+        .camera-loading {
+            position: absolute;
+            color: var(--text-primary);
+            font-size: 16px;
+            font-weight: 500;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255,255,255,0.1);
+            border-top: 4px solid var(--ios-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) scale(1); }
+            100% { transform: translateY(30px) scale(1.05); }
+        }
+
+        /* Results / Labels Container */
+        .results-container {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .results-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .results-container::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.3);
+            border-radius: 10px;
+        }
+
+        .label-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 18px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .label-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .label-name {
+            color: var(--text-primary);
+            font-size: 16px;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+
+        .label-score {
+            color: var(--text-primary);
+            font-size: 14px;
+            font-weight: 700;
+            background: rgba(0,0,0,0.2);
+            padding: 4px 10px;
+            border-radius: 12px;
+        }
+
+        .progress-bar-bg {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--ios-green);
+            border-radius: 10px;
+            transition: width 0.1s ease-out, background-color 0.3s ease;
+        }
+
+        /* Controls */
+        .controls {
+            margin-top: auto;
+            display: flex;
+            justify-content: center;
+            padding-top: 15px;
+        }
+
+        .btn {
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.4);
+            color: white;
+            padding: 15px 30px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 25px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: all 0.2s ease;
+            width: 100%;
+        }
+
+        .btn:active {
+            transform: scale(0.96);
+            background: rgba(255,255,255,0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Utility animations */
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Abstract Glassmorphism Backgrounds -->
+    <div class="bg-shape shape1"></div>
+    <div class="bg-shape shape2"></div>
+
+    <!-- Main Glass UI -->
+    <div class="app-container">
+        
+        <div class="header">
+            <h1>AI Vision</h1>
+            <p>Real-time Image Classification</p>
+        </div>
+
+        <div class="camera-container" id="camera-wrapper">
+            <div class="camera-loading" id="loader">
+                <div class="spinner"></div>
+                <span id="loader-text">Loading AI Model...</span>
+            </div>
+            <div id="webcam-container"></div>
+        </div>
+
+        <div class="results-container" id="label-container">
+            <!-- Label items will be dynamically injected here via JavaScript -->
+        </div>
+
+        <div class="controls">
+            <button class="btn" id="start-btn" onclick="initSystem()">Initialize Camera</button>
+        </div>
+
+    </div>
+
+    <!-- 
+      ==========================================================================
+      ADVANCED MODEL LOGIC & UI BINDING
+      ==========================================================================
+    -->
+    <script>
+        // System Constants & Configuration
+        const CONFIG = {
+            MODEL_URL: "https://teachablemachine.withgoogle.com/models/6cixYdjzm/",
+            TARGET_FPS: 60,
+            CAMERA_SIZE: 400, // Internal resolution calculation
+            COLORS: [
+                '#34C759', // iOS Green
+                '#007AFF', // iOS Blue
+                '#FF3B30', // iOS Red
+                '#FF9500', // iOS Orange
+                '#AF52DE', // iOS Purple
+                '#5856D6'  // iOS Indigo
+            ]
+        };
+
+        // Application State
+        const state = {
+            model: null,
+            webcam: null,
+            maxPredictions: 0,
+            isInitialized: false,
+            animationId: null
+        };
+
+        // DOM Elements mapping
+        const DOM = {
+            webcamContainer: document.getElementById("webcam-container"),
+            labelContainer: document.getElementById("label-container"),
+            loader: document.getElementById("loader"),
+            loaderText: document.getElementById("loader-text"),
+            startBtn: document.getElementById("start-btn")
+        };
+
+        /**
+         * Initialize the Teachable Machine Model and Webcam
+         * Requests permissions and sets up the prediction loop.
+         */
+        async function initSystem() {
+            if (state.isInitialized) return;
+            
+            try {
+                DOM.startBtn.disabled = true;
+                DOM.startBtn.innerText = "Connecting...";
+                DOM.loader.style.display = "flex";
+                
+                // 1. Load the Model
+                DOM.loaderText.innerText = "Downloading Model Assets...";
+                const modelURL = CONFIG.MODEL_URL + "model.json";
+                const metadataURL = CONFIG.MODEL_URL + "metadata.json";
+                
+                state.model = await tmImage.load(modelURL, metadataURL);
+                state.maxPredictions = state.model.getTotalClasses();
+
+                // 2. Setup the Webcam for Mobile/Desktop
+                DOM.loaderText.innerText = "Requesting Camera Access...";
+                const flip = true; // whether to flip the webcam
+                
+                // Calculate responsive camera dimensions
+                const width = DOM.webcamContainer.clientWidth || CONFIG.CAMERA_SIZE;
+                const height = DOM.webcamContainer.clientHeight || CONFIG.CAMERA_SIZE;
+
+                state.webcam = new tmImage.Webcam(width, height, flip); 
+                
+                // Request camera permission explicitly using facing mode environment for phones if needed,
+                // but teachable machine wrapper handles standard requests. 
+                await state.webcam.setup({ facingMode: "user" }); 
+                
+                DOM.loaderText.innerText = "Starting Stream...";
+                await state.webcam.play();
+
+                // 3. Mount UI and cleanup loading states
+                DOM.loader.style.display = "none";
+                state.isInitialized = true;
+                DOM.startBtn.style.display = "none"; // Hide button once running
+                
+                // Append canvas
+                DOM.webcamContainer.appendChild(state.webcam.canvas);
+                
+                // Generate UI elements for classes
+                buildLabelsUI();
+
+                // Start prediction loop
+                state.animationId = window.requestAnimationFrame(predictionLoop);
+
+            } catch (error) {
+                console.error("Initialization failed:", error);
+                DOM.loaderText.innerText = "Camera Access Denied or Error.";
+                DOM.loaderText.style.color = "#FF3B30";
+                DOM.startBtn.disabled = false;
+                DOM.startBtn.innerText = "Retry";
+            }
+        }
+
+        /**
+         * Core execution loop maintaining FPS and updating AI inference
+         */
+        async function predictionLoop() {
+            state.webcam.update(); // update the webcam frame
+            await predictFrame();
+            state.animationId = window.requestAnimationFrame(predictionLoop);
+        }
+
+        /**
+         * Executes inference on the current frame and updates the DOM
+         */
+        async function predictFrame() {
+            if (!state.model || !state.webcam) return;
+            
+            // run prediction
+            const predictions = await state.model.predict(state.webcam.canvas);
+            
+            // sort predictions by probability for better UX
+            const sortedPredictions = [...predictions].sort((a, b) => b.probability - a.probability);
+
+            for (let i = 0; i < state.maxPredictions; i++) {
+                const pred = sortedPredictions[i];
+                const percentage = (pred.probability * 100).toFixed(1);
+                
+                // Find DOM elements
+                const classNameSafe = pred.className.replace(/[^a-zA-Z0-9]/g, '-');
+                const elementId = `class-${classNameSafe}`;
+                const barFill = document.getElementById(`bar-${elementId}`);
+                const scoreText = document.getElementById(`score-${elementId}`);
+                const containerEl = document.getElementById(`container-${elementId}`);
+                
+                if (barFill && scoreText && containerEl) {
+                    // Update Text
+                    scoreText.innerText = `${percentage}%`;
+                    
+                    // Update Progress Bar
+                    barFill.style.width = `${percentage}%`;
+                    
+                    // Dynamic color coding based on confidence thresholds
+                    if (pred.probability > 0.85) {
+                        barFill.style.backgroundColor = CONFIG.COLORS[0]; // High confidence green
+                        containerEl.style.borderColor = "rgba(52, 199, 89, 0.5)"; // Green border highlight
+                    } else if (pred.probability > 0.50) {
+                        barFill.style.backgroundColor = CONFIG.COLORS[1]; // Medium confidence blue
+                        containerEl.style.borderColor = "rgba(255, 255, 255, 0.1)";
+                    } else {
+                        barFill.style.backgroundColor = "rgba(255,255,255,0.3)"; // Low confidence gray
+                        containerEl.style.borderColor = "rgba(255, 255, 255, 0.1)";
+                    }
+                    
+                    // Reorder DOM based on ranking dynamically
+                    containerEl.style.order = i;
+                }
+            }
+        }
+
+        /**
+         * Constructs the initial Glassmorphism UI components for the labels
+         */
+        function buildLabelsUI() {
+            DOM.labelContainer.innerHTML = ''; // Clear previous
+            DOM.labelContainer.style.display = 'flex';
+            DOM.labelContainer.style.flexDirection = 'column';
+            
+            const classes = state.model.getClassLabels();
+            
+            classes.forEach((className, index) => {
+                const classNameSafe = className.replace(/[^a-zA-Z0-9]/g, '-');
+                const elementId = `class-${classNameSafe}`;
+                
+                const wrapper = document.createElement('div');
+                wrapper.className = 'label-item fade-in';
+                wrapper.id = `container-${elementId}`;
+                wrapper.style.animationDelay = `${index * 0.1}s`;
+                
+                wrapper.innerHTML = `
+                    <div class="label-header">
+                        <span class="label-name">${className}</span>
+                        <span class="label-score" id="score-${elementId}">0.0%</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" id="bar-${elementId}"></div>
+                    </div>
+                `;
+                
+                DOM.labelContainer.appendChild(wrapper);
+            });
+        }
+
+        // Handle resizing for responsive canvas mapping
+        window.addEventListener('resize', () => {
+            if (state.webcam && state.isInitialized) {
+                // Allows CSS to handle visual scaling while maintaining model logic
+                const canvas = DOM.webcamContainer.querySelector('canvas');
+                if (canvas) {
+                    canvas.style.width = '100%';
+                    canvas.style.height = '100%';
+                }
+            }
+        });
+    </script>
+</body>
+</html>
