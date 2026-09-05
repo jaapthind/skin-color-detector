@@ -1,53 +1,31 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
-    <!-- 
-      ==========================================================================
-      META CONFIGURATION & ENVIRONMENT SETUP (GLITCH-FREE MOBILE FORTIFIED)
-      ========================================================================== 
-    -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#000000">
-    <meta name="description" content="Advanced Neural Image Classification Engine with stable static grid layouts and glitch-free mobile inference.">
-    <meta name="author" content="NeuralVision Systems">
-    
-    <title>AI Vision Classification - Glitch Free Stabilized</title>
+    <title>SkinScan™ - Mobile Optimized</title>
 
-    <!-- 
-      ==========================================================================
-      EXTERNAL LIBRARIES & DEPENDENCIES
-      ========================================================================== 
-    -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
 
-    <!-- 
-      ==========================================================================
-      GLOBAL STYLESHEET (FIXED CARD SWAPPING & STABLE STATIC LAYOUT)
-      ========================================================================== 
-    -->
     <style>
-        /* ----------------------------------------------------------------------
-           1. COMPREHENSIVE CSS RESET & BASE STYLES
-           ---------------------------------------------------------------------- */
         *, *::before, *::after {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
             border: 0;
             outline: 0;
-            vertical-align: baseline;
             background: transparent;
         }
 
         html, body {
             width: 100%;
             height: 100%;
-            position: fixed; 
+            position: fixed;
             overflow: hidden;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             -webkit-tap-highlight-color: transparent;
@@ -56,38 +34,16 @@
             touch-action: none;
         }
 
-        ul, ol { list-style: none; }
-        a { text-decoration: none; color: inherit; }
-        button { font-family: inherit; border: none; outline: none; background: none; }
-
-        /* ----------------------------------------------------------------------
-           2. DESIGN SYSTEM VARIABLES
-           ---------------------------------------------------------------------- */
         :root {
             --brand-blue: #4285F4;
             --brand-red: #EA4335;
             --brand-yellow: #FBBC05;
             --brand-green: #34A853;
-            
             --glass-bg: rgba(255, 255, 255, 0.12);
             --glass-border: rgba(255, 255, 255, 0.25);
-            --glass-blur: blur(30px);
-            
-            --spacing-xs: 4px;
-            --spacing-sm: 8px;
-            --spacing-md: 12px;
-            --spacing-lg: 16px;
-            --spacing-xl: 20px;
-            
-            --radius-sm: 8px;
-            --radius-md: 12px;
-            --radius-lg: 16px;
-            --radius-xl: 24px;
+            --glass-blur: blur(20px);
         }
 
-        /* ----------------------------------------------------------------------
-           3. DYNAMIC BACKGROUND ENGINE
-           ---------------------------------------------------------------------- */
         .ambient-layer {
             position: fixed;
             top: 0; left: 0; 
@@ -95,47 +51,14 @@
             z-index: 1;
             background: linear-gradient(135deg, var(--brand-blue) 0%, var(--brand-red) 33%, var(--brand-yellow) 66%, var(--brand-green) 100%);
             background-size: 400% 400%;
-            animation: gradientDrift 20s ease infinite alternate;
+            animation: gradientDrift 15s ease infinite alternate;
         }
 
         @keyframes gradientDrift {
             0% { background-position: 0% 0%; }
-            50% { background-position: 100% 100%; }
-            100% { background-position: 0% 50%; }
+            100% { background-position: 100% 100%; }
         }
 
-        .ambient-orb {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.5;
-            z-index: 2;
-            mix-blend-mode: screen;
-            animation: orbFloat 25s infinite alternate ease-in-out;
-            pointer-events: none;
-        }
-
-        .orb-alpha {
-            width: 350px; height: 350px;
-            background: var(--brand-blue);
-            top: -10%; left: -10%;
-        }
-
-        .orb-beta {
-            width: 450px; height: 450px;
-            background: var(--brand-red);
-            bottom: -15%; right: -10%;
-            animation-delay: -7s;
-        }
-
-        @keyframes orbFloat {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(40px, 60px) scale(1.1); }
-        }
-
-        /* ----------------------------------------------------------------------
-           4. MAIN APPLICATION CHASSIS
-           ---------------------------------------------------------------------- */
         .application-root {
             position: relative;
             z-index: 10;
@@ -144,78 +67,59 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: var(--spacing-sm);
+            padding: 8px;
         }
 
         .glass-chassis {
             width: 100%;
-            max-width: 480px;
+            max-width: 450px;
             height: 100%;
             max-height: 100vh;
             background: var(--glass-bg);
             backdrop-filter: var(--glass-blur);
             -webkit-backdrop-filter: var(--glass-blur);
             border: 1px solid var(--glass-border);
-            border-radius: 28px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.3);
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
             display: flex;
             flex-direction: column;
             overflow: hidden;
         }
 
-        /* ----------------------------------------------------------------------
-           5. HEADER INTERFACE
-           ---------------------------------------------------------------------- */
         .interface-header {
-            padding: var(--spacing-md) var(--spacing-lg);
+            padding: 10px 16px;
             text-align: center;
             border-bottom: 1px solid rgba(255,255,255,0.08);
             background: rgba(255,255,255,0.02);
             flex-shrink: 0;
         }
-            .floating-element {
-            animation: floatSmooth 4s ease-in-out infinite alternate;
-        }
-        
-        @keyframes floatSmooth {
-            0% { transform: translateY(0px); }
-            100% { transform: translateY(-8px); }
-        }
 
         .interface-header h1 {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 800;
-            letter-spacing: -0.02em;
-            margin-bottom: 2px;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            margin-bottom: 1px;
         }
 
         .interface-header p {
-            font-size: 12px;
+            font-size: 11px;
             color: rgba(255,255,255,0.7);
-            font-weight: 500;
         }
 
-        /* ----------------------------------------------------------------------
-           6. SENSOR VIEWPORT
-           ---------------------------------------------------------------------- */
         .sensor-container {
-            padding: var(--spacing-md);
+            padding: 8px;
             display: flex;
             justify-content: center;
             align-items: center;
-            flex-direction: column;
             flex-shrink: 0;
         }
 
         .sensor-mount {
             width: 100%;
-            max-width: 210px;
+            max-width: 160px;
             aspect-ratio: 1 / 1;
             background: rgba(0,0,0,0.6);
-            border-radius: var(--radius-lg);
+            border-radius: 14px;
             border: 1px solid rgba(255,255,255,0.15);
-            box-shadow: inset 0 0 30px rgba(0,0,0,0.7), 0 10px 20px rgba(0,0,0,0.2);
             overflow: hidden;
             position: relative;
             display: flex;
@@ -230,7 +134,7 @@
             justify-content: center;
             align-items: center;
             opacity: 0;
-            transition: opacity 0.8s ease;
+            transition: opacity 0.5s ease;
         }
 
         #video-feed.active { opacity: 1; }
@@ -240,28 +144,7 @@
             height: 100% !important;
             object-fit: cover !important;
             transform: scaleX(-1);
-            border-radius: calc(var(--radius-lg) - 2px);
-        }
-
-        .scanner-beam {
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 3px;
-            background: rgba(255,255,255,0.9);
-            box-shadow: 0 0 15px #fff, 0 0 30px var(--brand-blue);
-            opacity: 0;
-            z-index: 5;
-        }
-
-        .sensor-mount.active .scanner-beam {
-            animation: beamSweep 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-        }
-
-        @keyframes beamSweep {
-            0% { top: 0%; opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { top: calc(100% - 3px); opacity: 0; }
+            border-radius: 12px;
         }
 
         .boot-loader {
@@ -271,11 +154,10 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            gap: var(--spacing-sm);
-            background: rgba(0,0,0,0.75);
-            backdrop-filter: blur(10px);
+            gap: 6px;
+            background: rgba(0,0,0,0.8);
             z-index: 10;
-            transition: opacity 0.4s ease;
+            transition: opacity 0.3s ease;
         }
 
         .boot-loader.hidden {
@@ -284,7 +166,7 @@
         }
 
         .spinner-ring {
-            width: 36px; height: 36px;
+            width: 30px; height: 30px;
             border: 3px solid rgba(255,255,255,0.1);
             border-top: 3px solid #fff;
             border-radius: 50%;
@@ -294,24 +176,19 @@
         @keyframes spinFast { to { transform: rotate(360deg); } }
 
         .loader-text {
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 600;
-            letter-spacing: 0.05em;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
 
-        /* ----------------------------------------------------------------------
-           7. CLASSIFICATION METRICS (STABLE SIDE-BY-SIDE GRID - NO RE-ORDERING)
-           ---------------------------------------------------------------------- */
         .metrics-grid {
             flex-grow: 1;
-            padding: 0 var(--spacing-md) var(--spacing-sm);
+            padding: 0 12px 6px;
             display: flex;
             flex-direction: row;
             flex-wrap: wrap;
             justify-content: center;
             align-content: flex-start;
-            gap: var(--spacing-sm);
+            gap: 8px;
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
         }
@@ -319,20 +196,16 @@
         .metrics-grid::-webkit-scrollbar { width: 0; }
 
         .metric-card {
-            flex: 1 1 calc(50% - (var(--spacing-sm) / 2));
-            max-width: calc(50% - (var(--spacing-sm) / 2));
-            min-width: 140px;
-            
+            flex: 1 1 calc(50% - 4px);
+            max-width: calc(50% - 4px);
+            min-width: 130px;
             background: rgba(255,255,255,0.08);
             border: 1px solid rgba(255,255,255,0.15);
-            border-radius: var(--radius-md);
-            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: 10px;
+            padding: 8px 10px;
             display: flex;
             flex-direction: column;
-            gap: 6px;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-            transition: border-color 0.3s ease, background 0.3s ease;
-            /* NOTE: Explicitly NO flex 'order' property to prevent swapping places glitch */
+            gap: 4px;
         }
 
         .metric-header {
@@ -344,11 +217,10 @@
         }
 
         .metric-label {
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 700;
             text-transform: capitalize;
             color: #fff;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.4);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -356,22 +228,20 @@
         }
 
         .metric-value {
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 800;
             background: rgba(0,0,0,0.25);
-            padding: 1px 8px;
-            border-radius: 6px;
+            padding: 1px 6px;
+            border-radius: 4px;
             font-variant-numeric: tabular-nums;
-            border: 1px solid rgba(255,255,255,0.05);
         }
 
         .metric-track {
             width: 100%;
-            height: 6px;
+            height: 5px;
             background: rgba(0,0,0,0.4);
             border-radius: 3px;
             overflow: hidden;
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.5);
         }
 
         .metric-fill {
@@ -379,95 +249,56 @@
             width: 0%;
             background: #fff;
             border-radius: 3px;
-            transition: width 0.1s linear, background-image 0.3s ease, box-shadow 0.3s ease;
+            transition: width 0.1s linear;
         }
 
-        /* Stable Tier Modifiers (No layout shifting transforms) */
-        .tier-alpha { 
-            background: rgba(255,255,255,0.15); 
-            border-color: rgba(52, 168, 83, 0.6); 
-        }
-        .tier-alpha .metric-fill { 
-            background-image: linear-gradient(90deg, var(--brand-green), #66bb6a); 
-            box-shadow: 0 0 10px var(--brand-green);
-        }
+        .tier-alpha { background: rgba(52, 168, 83, 0.2); border-color: var(--brand-green); }
+        .tier-alpha .metric-fill { background: var(--brand-green); }
         .tier-alpha .metric-value { color: #81c784; }
         
-        .tier-beta { 
-            border-color: rgba(251, 188, 5, 0.4); 
-        }
-        .tier-beta .metric-fill { 
-            background-image: linear-gradient(90deg, var(--brand-yellow), #ffca28); 
-            box-shadow: 0 0 10px var(--brand-yellow);
-        }
+        .tier-beta { border-color: var(--brand-yellow); }
+        .tier-beta .metric-fill { background: var(--brand-yellow); }
         .tier-beta .metric-value { color: #ffd54f; }
         
-        .tier-gamma { 
-            opacity: 0.75;
-            border-color: rgba(255,255,255,0.05);
-        }
-        .tier-gamma .metric-fill { 
-            background-image: linear-gradient(90deg, var(--brand-red), #ef5350); 
-        }
-        .tier-gamma .metric-value { color: rgba(255,255,255,0.5); }
+        .tier-gamma { opacity: 0.7; }
+        .tier-gamma .metric-fill { background: var(--brand-red); }
 
-        /* ----------------------------------------------------------------------
-           8. ACTION CONTROLS
-           ---------------------------------------------------------------------- */
         .action-dock {
-            padding: var(--spacing-sm) var(--spacing-lg) var(--spacing-lg);
+            padding: 10px 16px 24px;
             display: flex;
             justify-content: center;
-            background: linear-gradient(to top, rgba(255,255,255,0.05) 0%, transparent 100%);
+            background: rgba(0,0,0,0.2);
             border-top: 1px solid rgba(255,255,255,0.05);
             flex-shrink: 0;
         }
 
         .ignite-btn {
             width: 100%;
-            max-width: 320px;
-            padding: 14px;
-            margin-bottom: 30px; /* <--- ADD THIS LINE HERE */
-            border-radius: var(--radius-lg);
-            background: rgba(255,255,255,0.2);
-            backdrop-filter: blur(10px);
+            max-width: 300px;
+            padding: 12px;
+            border-radius: 16px;
+            background: rgba(255,255,255,0.25);
             border: 1px solid rgba(255,255,255,0.4);
-            border-bottom: 1px solid rgba(0,0,0,0.2);
             color: #fff;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 700;
-            letter-spacing: 0.02em;
             cursor: pointer;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
             display: flex;
             justify-content: center;
             align-items: center;
             gap: 8px;
         }
 
-        .ignite-btn:active {
-            transform: scale(0.96) translateY(2px);
-            background: rgba(255,255,255,0.3);
-        }
-
-        .ignite-btn:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-            transform: none;
-        }
-        
+        .ignite-btn:active { transform: scale(0.96); }
+        .ignite-btn:disabled { opacity: 0.4; cursor: not-allowed; }
         .display-none { display: none !important; }
 
-        /* ----------------------------------------------------------------------
-           9. 100% OVERLAY (CONGRATULATIONS SCREEN)
-           ---------------------------------------------------------------------- */
         .congrats-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.9);
+            background: rgba(0, 0, 0, 0.92);
             backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
             z-index: 9999;
             display: flex;
             flex-direction: column;
@@ -475,7 +306,7 @@
             align-items: center;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.4s ease;
+            transition: opacity 0.3s ease;
         }
 
         .congrats-overlay.show {
@@ -485,79 +316,43 @@
 
         .congrats-content {
             text-align: center;
-            transform: scale(0.85);
-            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
             padding: 20px;
             max-width: 90vw;
         }
 
-        .congrats-overlay.show .congrats-content {
-            transform: scale(1);
-        }
-
         .congrats-title {
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             font-weight: 900;
-            background: linear-gradient(90deg, #FFD700, #FFA500, #FF8C00);
+            background: linear-gradient(90deg, #FFD700, #FFA500);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 12px;
-            text-shadow: 0 10px 30px rgba(255, 165, 0, 0.4);
+            margin-bottom: 10px;
         }
 
         .congrats-label {
-            font-size: 2.2rem;
+            font-size: 2rem;
             font-weight: 900;
             color: #fff;
-            text-transform: uppercase;
-            letter-spacing: 2px;
             word-break: break-word;
-            text-shadow: 0 0 20px rgba(255,255,255,0.8), 0 0 40px var(--brand-blue);
-            animation: pulseLabel 1.5s infinite alternate;
-        }
-
-        @keyframes pulseLabel {
-            0% { transform: scale(1); }
-            100% { transform: scale(1.03); }
         }
 
         .congrats-reset-btn {
-            margin-top: 35px;
-            padding: 12px 30px;
-            border-radius: 24px;
-            background: rgba(255,255,255,0.15);
-            border: 2px solid rgba(255,255,255,0.5);
+            margin-top: 30px;
+            padding: 10px 24px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.5);
             color: #fff;
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: bold;
             cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .congrats-reset-btn:active {
-            background: rgba(255,255,255,0.3);
-            transform: scale(0.95);
-        }
-
-        .confetti {
-            position: absolute;
-            width: 8px; height: 8px;
-            background: #fff;
-            opacity: 0;
-            pointer-events: none;
         }
     </style>
 </head>
 <body>
 
-    <!-- DOM: Ambient Background Effects -->
     <div class="ambient-layer"></div>
-    <div class="ambient-orb orb-alpha"></div>
-    <div class="ambient-orb orb-beta"></div>
 
-    <!-- DOM: 100% Congratulations Overlay -->
     <div class="congrats-overlay" id="overlay-congrats">
         <div class="congrats-content">
             <div class="congrats-title">CONGRATS, YOU ARE</div>
@@ -566,70 +361,45 @@
         </div>
     </div>
 
-    <!-- DOM: Core App Structure -->
     <div class="application-root">
         <main class="glass-chassis">
-            
-            <!-- Header -->
             <header class="interface-header">
                 <h1>SkinScan™</h1>
-                <p>Live skin detection</p>
+                <p>Live Mobile Detection</p>
             </header>
 
-            <!-- Video/Sensor Area -->
             <section class="sensor-container">
                 <div class="sensor-mount" id="sensor-mount">
                     <div class="boot-loader" id="loader-ui">
                         <div class="spinner-ring"></div>
-                        <span class="loader-text" id="loader-message">Initializing...</span>
+                        <span class="loader-text" id="loader-message">Ready</span>
                     </div>
-                    <div class="scanner-beam"></div>
                     <div id="video-feed"></div>
                 </div>
             </section>
 
-            <!-- Metrics Grid (Side by Side - Static Position Order) -->
-            <section class="metrics-grid" id="metrics-grid">
-                <!-- Dynamically populated cards -->
-            </section>
+            <section class="metrics-grid" id="metrics-grid"></section>
 
-            <!-- Action Controls -->
             <section class="action-dock">
                 <button class="ignite-btn" id="btn-start">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
                     </svg>
                     <span>Activate SkinScan™</span>
                 </button>
             </section>
-
         </main>
     </div>
 
-    <!-- 
-      ==========================================================================
-      JAVASCRIPT LOGIC & STABILIZED INFERENCE PIPELINE
-      ========================================================================== 
-    -->
     <script>
-        /**
-         * System Configuration Variables
-         */
         const AppConfig = {
             ModelEndpoint: "https://teachablemachine.withgoogle.com/models/DPuAl5UGa/",
             Resolution: 224, 
             TargetFPS: 30, 
-            Thresholds: {
-                Alpha: 0.80, 
-                Beta:  0.40  
-            },
             TriggerValue: 0.93, 
-            WarmupFrames: 15   
+            WarmupFrames: 10
         };
 
-        /**
-         * Volatile Runtime State
-         */
         const AppState = {
             Model: null,
             Webcam: null,
@@ -642,9 +412,6 @@
             UINodes: {} 
         };
 
-        /**
-         * Cached DOM Element References
-         */
         const DOM = {
             BtnStart: document.getElementById('btn-start'),
             LoaderUI: document.getElementById('loader-ui'),
@@ -657,16 +424,13 @@
             BtnResetOverlay: document.getElementById('btn-reset-overlay')
         };
 
-        /**
-         * Core Initialization Sequence
-         */
         const StartSequence = async () => {
             if (AppState.IsRunning) return;
             
             try {
                 DOM.BtnStart.disabled = true;
                 DOM.LoaderUI.classList.remove('hidden');
-                DOM.LoaderMsg.innerText = "Downloading Weights...";
+                DOM.LoaderMsg.innerText = "Loading Model...";
                 
                 const urlModel = AppConfig.ModelEndpoint + "model.json";
                 const urlMetadata = AppConfig.ModelEndpoint + "metadata.json";
@@ -675,12 +439,12 @@
                 AppState.TotalClasses = AppState.Model.getTotalClasses();
                 const classLabels = AppState.Model.getClassLabels();
                 
-                DOM.LoaderMsg.innerText = "Requesting Camera...";
+                DOM.LoaderMsg.innerText = "Camera Permit...";
                 AppState.Webcam = new tmImage.Webcam(AppConfig.Resolution, AppConfig.Resolution, true);
                 
                 await AppState.Webcam.setup({ facingMode: "user" }); 
                 
-                DOM.LoaderMsg.innerText = "Starting Stream...";
+                DOM.LoaderMsg.innerText = "Starting...";
                 await AppState.Webcam.play();
                 
                 DOM.VideoFeed.innerHTML = '';
@@ -690,7 +454,6 @@
                 
                 DOM.LoaderUI.classList.add('hidden');
                 DOM.VideoFeed.classList.add('active');
-                DOM.SensorMount.classList.add('active');
                 DOM.BtnStart.classList.add('display-none');
                 
                 AppState.IsRunning = true;
@@ -698,16 +461,12 @@
                 AppState.AnimationID = window.requestAnimationFrame(InferenceLoop);
 
             } catch (err) {
-                console.error("Initialization Fault:", err);
-                DOM.LoaderMsg.innerText = "Camera Access Error.";
+                console.error(err);
+                DOM.LoaderMsg.innerText = "Camera Error";
                 DOM.BtnStart.disabled = false;
-                DOM.BtnStart.innerText = "Retry";
             }
         };
 
-        /**
-         * Recursive Render and Inference Loop
-         */
         const InferenceLoop = async (timestamp) => {
             if (!AppState.IsRunning) return;
 
@@ -716,7 +475,6 @@
 
             if (elapsed > limit) {
                 AppState.LastFrameTime = timestamp - (elapsed % limit);
-                
                 AppState.Webcam.update(); 
                 
                 if (!AppState.OverlayActive) {
@@ -727,9 +485,6 @@
             AppState.AnimationID = window.requestAnimationFrame(InferenceLoop);
         };
 
-        /**
-         * Evaluate current frame and map safely to UI without position-swapping glitches
-         */
         const ProcessInference = async () => {
             if (!AppState.Model || !AppState.Webcam) return;
             
@@ -759,9 +514,9 @@
 
                 uiNode.Card.classList.remove('tier-alpha', 'tier-beta', 'tier-gamma');
 
-                if (rawProb >= AppConfig.Thresholds.Alpha) {
+                if (rawProb >= 0.80) {
                     uiNode.Card.classList.add('tier-alpha');
-                } else if (rawProb >= AppConfig.Thresholds.Beta) {
+                } else if (rawProb >= 0.40) {
                     uiNode.Card.classList.add('tier-beta');
                 } else {
                     uiNode.Card.classList.add('tier-gamma');
@@ -769,9 +524,6 @@
             }
         };
 
-        /**
-         * Fire the full screen achievement event
-         */
         const Trigger100PercentEvent = (className) => {
             AppState.OverlayActive = true;
             DOM.CongratsName.innerText = className;
@@ -779,22 +531,15 @@
             GenerateConfetti();
         };
 
-        /**
-         * Reset from the overlay back to normal operation
-         */
         DOM.BtnResetOverlay.addEventListener('click', () => {
             DOM.OverlayCongrats.classList.remove('show');
             AppState.FrameCount = 0;
             setTimeout(() => {
                 AppState.OverlayActive = false;
             }, 800);
-            
             document.querySelectorAll('.confetti').forEach(c => c.remove());
         });
 
-        /**
-         * Builds the CSS Flexbox Side-by-Side metrics grid statically (Fixed layout position order)
-         */
         const BuildMetricCards = (labels) => {
             DOM.MetricsGrid.innerHTML = '';
             AppState.UINodes = {};
@@ -826,7 +571,6 @@
                 fill.className = 'metric-fill';
 
                 track.appendChild(fill);
-
                 card.appendChild(header);
                 card.appendChild(track);
                 DOM.MetricsGrid.appendChild(card);
@@ -845,30 +589,26 @@
         
         const GenerateConfetti = () => {
             const colors = ['#4285F4', '#EA4335', '#FBBC05', '#34A853', '#FFFFFF'];
-            for(let i = 0; i < 40; i++) {
+            for(let i = 0; i < 30; i++) {
                 const conf = document.createElement('div');
-                conf.className = 'confetti';
+                conf.style.position = 'absolute';
+                conf.style.width = '6px';
+                conf.style.height = '6px';
                 conf.style.left = Math.random() * 100 + 'vw';
                 conf.style.top = '-10px';
                 conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                
-                const duration = Math.random() * 2 + 1;
-                const delay = Math.random() * 0.5;
-                
-                conf.style.transition = `transform ${duration}s ease-in, opacity ${duration}s`;
+                conf.style.transition = `transform 2s ease-in, opacity 2s`;
                 DOM.OverlayCongrats.appendChild(conf);
                 
                 void conf.offsetWidth;
-                
                 setTimeout(() => {
                     conf.style.opacity = 1;
-                    conf.style.transform = `translateY(110vh) rotate(${Math.random() * 720}deg)`;
-                }, delay * 1000);
+                    conf.style.transform = `translateY(110vh) rotate(${Math.random() * 360}deg)`;
+                }, 50);
             }
         };
 
         DOM.BtnStart.addEventListener('click', StartSequence);
-
     </script>
 </body>
 </html>
