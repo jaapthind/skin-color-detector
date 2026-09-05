@@ -1,1248 +1,528 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
-    <!-- 
-      ==========================================================================
-      META TAGS & DOCUMENT CONFIGURATION
-      ========================================================================== 
-    -->
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="AI Vision">
-    <meta name="application-name" content="AI Vision">
-    <meta name="theme-color" content="#4285F4">
-    <meta name="format-detection" content="telephone=no">
-    <meta name="description" content="Advanced Neural Image Classification Engine using TensorFlow.js and Teachable Machine.">
-    <meta name="author" content="NeuralVision Systems">
-    
-    <title>Advanced iOS Liquid Glass AI Vision - Core</title>
+    <meta name="theme-color" content="#000000">
+    <title>AI Vision Classification</title>
 
-    <!-- 
-      ==========================================================================
-      EXTERNAL LIBRARIES & DEPENDENCIES
-      ========================================================================== 
-    -->
+    <!-- TensorFlow.js & Teachable Machine Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
 
-    <!-- 
-      ==========================================================================
-      GLOBAL STYLESHEET
-      ========================================================================== 
-    -->
     <style>
-        /* ----------------------------------------------------------------------
-           1. COMPREHENSIVE CSS RESET & NORMALIZE
-           ---------------------------------------------------------------------- */
-        *, *::before, *::after {
+        /* ==========================================================================
+           1. CSS RESET
+           ========================================================================== */
+        * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            border: 0;
-            outline: 0;
-            font-size: 100%;
-            vertical-align: baseline;
-            background: transparent;
-        }
-
-        html, body {
-            height: 100%;
-            width: 100%;
-            overflow: hidden; /* Prevents bouncing on iOS */
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            text-rendering: optimizeLegibility;
-            background-color: #000000;
-            color: #ffffff;
-            touch-action: none;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             -webkit-tap-highlight-color: transparent;
         }
 
-        article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section, main {
-            display: block;
-        }
-
-        ul, ol {
-            list-style: none;
-        }
-
-        blockquote, q {
-            quotes: none;
-        }
-
-        blockquote:before, blockquote:after, q:before, q:after {
-            content: '';
-            content: none;
-        }
-
-        table {
-            border-collapse: collapse;
-            border-spacing: 0;
-        }
-
-        input, button, textarea, select {
-            font-family: inherit;
-            font-size: inherit;
-            line-height: inherit;
-            margin: 0;
-            padding: 0;
-            border: none;
-            background: none;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
-        }
-
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
-
-        img, video, canvas, audio, iframe, embed, object {
-            display: block;
-            max-width: 100%;
-            height: auto;
-        }
-
-        /* ----------------------------------------------------------------------
-           2. DESIGN SYSTEM & CSS VARIABLES
-           ---------------------------------------------------------------------- */
-        :root {
-            /* Google Brand Colors */
-            --google-blue: #4285F4;
-            --google-red: #EA4335;
-            --google-yellow: #FBBC05;
-            --google-green: #34A853;
-
-            /* Liquid Glass Colors */
-            --glass-base: rgba(255, 255, 255, 0.15);
-            --glass-highlight: rgba(255, 255, 255, 0.35);
-            --glass-shadow-color: rgba(0, 0, 0, 0.25);
-            
-            /* Typography */
-            --font-size-xs: 0.75rem;
-            --font-size-sm: 0.875rem;
-            --font-size-md: 1rem;
-            --font-size-lg: 1.25rem;
-            --font-size-xl: 1.5rem;
-            --font-size-xxl: 2rem;
-
-            --font-weight-regular: 400;
-            --font-weight-medium: 500;
-            --font-weight-semibold: 600;
-            --font-weight-bold: 700;
-            --font-weight-extrabold: 800;
-
-            /* Spacing */
-            --spacing-xs: 4px;
-            --spacing-sm: 8px;
-            --spacing-md: 16px;
-            --spacing-lg: 24px;
-            --spacing-xl: 32px;
-            --spacing-xxl: 48px;
-
-            /* Border Radii */
-            --radius-sm: 8px;
-            --radius-md: 16px;
-            --radius-lg: 24px;
-            --radius-xl: 32px;
-            --radius-round: 50%;
-
-            /* Transitions */
-            --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
-            --transition-normal: 300ms cubic-bezier(0.4, 0, 0.2, 1);
-            --transition-slow: 500ms cubic-bezier(0.4, 0, 0.2, 1);
-            --transition-bounce: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        /* ----------------------------------------------------------------------
-           3. DYNAMIC BACKGROUND ENGINE (GOOGLE GRADIENTS)
-           ---------------------------------------------------------------------- */
-        .ambient-environment {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: 1;
+        html, body {
+            width: 100%;
+            height: 100%;
             overflow: hidden;
             background-color: #000;
-            /* Multi-stop moving gradient using Google colors */
-            background: linear-gradient(
-                125deg, 
-                var(--google-blue) 0%, 
-                var(--google-red) 33%, 
-                var(--google-yellow) 66%, 
-                var(--google-green) 100%
-            );
+            color: #fff;
+        }
+
+        /* ==========================================================================
+           2. DYNAMIC GOOGLE GRADIENT BACKGROUND
+           ========================================================================== */
+        .bg-layer {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: 1;
+            background: linear-gradient(135deg, #4285F4 0%, #EA4335 33%, #FBBC05 66%, #34A853 100%);
             background-size: 400% 400%;
-            animation: flowingGradient 15s ease-in-out infinite alternate;
+            animation: gradientMove 15s ease infinite alternate;
         }
 
-        @keyframes flowingGradient {
-            0% {
-                background-position: 0% 0%;
-            }
-            50% {
-                background-position: 100% 100%;
-            }
-            100% {
-                background-position: 0% 50%;
-            }
+        @keyframes gradientMove {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 100% 100%; }
         }
 
-        /* Floating light orbs for deeper liquid reflection context */
-        .ambient-orb {
+        .orb {
             position: absolute;
-            border-radius: var(--radius-round);
-            filter: blur(100px);
+            border-radius: 50%;
+            filter: blur(80px);
             opacity: 0.6;
             z-index: 2;
             mix-blend-mode: screen;
-            pointer-events: none;
-            will-change: transform;
+            animation: orbFloat 20s infinite alternate ease-in-out;
         }
 
-        .ambient-orb-primary {
-            width: 60vw;
-            height: 60vw;
-            background: radial-gradient(circle at center, #ffffff 0%, var(--google-blue) 100%);
-            top: -20vh;
-            left: -10vw;
-            animation: floatOrb 20s infinite alternate cubic-bezier(0.45, 0.05, 0.55, 0.95);
+        .orb-1 {
+            width: 300px; height: 300px;
+            background: #4285F4;
+            top: -50px; left: -50px;
         }
 
-        .ambient-orb-secondary {
-            width: 50vw;
-            height: 50vw;
-            background: radial-gradient(circle at center, #ffffff 0%, var(--google-red) 100%);
-            bottom: -10vh;
-            right: -20vw;
-            animation: floatOrbReverse 25s infinite alternate cubic-bezier(0.45, 0.05, 0.55, 0.95);
+        .orb-2 {
+            width: 400px; height: 400px;
+            background: #EA4335;
+            bottom: -100px; right: -50px;
+            animation-delay: -5s;
         }
 
-        .ambient-orb-tertiary {
-            width: 40vw;
-            height: 40vw;
-            background: radial-gradient(circle at center, #ffffff 0%, var(--google-yellow) 100%);
-            top: 30vh;
-            left: 20vw;
-            animation: floatOrb 30s infinite alternate-reverse cubic-bezier(0.45, 0.05, 0.55, 0.95);
-        }
-
-        @keyframes floatOrb {
+        @keyframes orbFloat {
             0% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(10vw, -10vh) scale(1.1); }
-            100% { transform: translate(-5vw, 15vh) scale(0.9); }
+            100% { transform: translate(50px, 50px) scale(1.2); }
         }
 
-        @keyframes floatOrbReverse {
-            0% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(-15vw, 10vh) scale(1.2); }
-            100% { transform: translate(10vw, -5vh) scale(0.8); }
-        }
-
-        /* ----------------------------------------------------------------------
-           4. MAIN LAYOUT AND LIQUID GLASS PANEL
-           ---------------------------------------------------------------------- */
-        .application-root {
+        /* ==========================================================================
+           3. MAIN LAYOUT
+           ========================================================================== */
+        .app-container {
             position: relative;
             z-index: 10;
             width: 100vw;
             height: 100vh;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            padding: var(--spacing-md);
-            /* Removed perspective and 3D space to eliminate parallax */
+            padding: 20px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
-        .liquid-glass-chassis {
+        .glass-panel {
             width: 100%;
-            max-width: 450px;
-            height: 100%;
-            max-height: 900px;
-            
-            /* Liquid Glass Morphism Texture */
-            background: linear-gradient(
-                135deg, 
-                rgba(255, 255, 255, 0.20) 0%, 
-                rgba(255, 255, 255, 0.03) 100%
-            );
-            backdrop-filter: blur(40px) saturate(180%);
-            -webkit-backdrop-filter: blur(40px) saturate(180%);
-            
-            /* High-fidelity iOS beveling */
-            border-top: 1px solid rgba(255, 255, 255, 0.7);
-            border-left: 1px solid rgba(255, 255, 255, 0.5);
-            border-right: 1px solid rgba(255, 255, 255, 0.1);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 40px;
-            
-            /* Volumetric shadow for elevation */
-            box-shadow: 
-                0 30px 60px rgba(0, 0, 0, 0.3),
-                inset 0 1px 0 rgba(255, 255, 255, 0.4),
-                inset 0 0 30px rgba(255, 255, 255, 0.1);
-            
+            max-width: 500px;
+            min-height: 90vh;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            position: relative;
-            /* Removed transform transition related to parallax */
+            margin-bottom: 20px;
         }
 
-        /* Liquid inner reflection overlay */
-        .liquid-glass-chassis::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 150px;
-            background: linear-gradient(
-                to bottom, 
-                rgba(255,255,255,0.4) 0%, 
-                rgba(255,255,255,0) 100%
-            );
-            pointer-events: none;
-            z-index: 15;
-            border-top-left-radius: 40px;
-            border-top-right-radius: 40px;
-        }
-
-        /* ----------------------------------------------------------------------
-           5. STATUS INDICATOR (TOP RIGHT)
-           ---------------------------------------------------------------------- */
-        .system-status-pill {
-            position: absolute;
-            top: 24px;
-            right: 24px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(0, 0, 0, 0.2);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            padding: 8px 16px;
-            border-radius: var(--radius-xl);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            z-index: 50;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            transition: all var(--transition-normal);
-        }
-
-        .status-led {
-            width: 12px;
-            height: 12px;
-            border-radius: var(--radius-round);
-            background: var(--google-red);
-            box-shadow: 0 0 12px var(--google-red);
-            transition: background var(--transition-normal), box-shadow var(--transition-normal);
-        }
-
-        .system-status-pill.online .status-led {
-            background: var(--google-green);
-            box-shadow: 0 0 12px var(--google-green);
-        }
-
-        .status-label {
-            color: #ffffff;
-            font-size: var(--font-size-xs);
-            font-weight: var(--font-weight-bold);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
-        }
-
-        /* ----------------------------------------------------------------------
-           6. HEADER TYPOGRAPHY
-           ---------------------------------------------------------------------- */
-        .panel-header {
-            padding: 40px 24px 20px;
+        /* ==========================================================================
+           4. HEADER
+           ========================================================================== */
+        .header {
+            padding: 30px 20px 20px;
             text-align: center;
-            position: relative;
-            z-index: 20;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            background: rgba(255, 255, 255, 0.05);
-            flex-shrink: 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
-        .panel-title {
-            font-size: var(--font-size-xl);
-            font-weight: var(--font-weight-extrabold);
-            letter-spacing: -0.03em;
-            color: #ffffff;
-            text-shadow: 0 2px 15px rgba(0,0,0,0.3);
-            margin-bottom: var(--spacing-xs);
+        .header h1 {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 5px;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.3);
         }
 
-        .panel-subtitle {
-            font-size: var(--font-size-sm);
-            color: rgba(255, 255, 255, 0.85);
-            font-weight: var(--font-weight-medium);
-            text-shadow: 0 1px 5px rgba(0,0,0,0.2);
-            letter-spacing: 0.02em;
+        .header p {
+            font-size: 14px;
+            color: rgba(255,255,255,0.8);
         }
 
-        /* ----------------------------------------------------------------------
-           7. CAMERA VIEWPORT AND SCANNER UI
-           ---------------------------------------------------------------------- */
-        .viewport-container {
-            padding: var(--spacing-lg);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            position: relative;
-            z-index: 20;
-            flex-shrink: 0;
-        }
-
-        .sensor-frame {
-            width: 100%;
-            aspect-ratio: 1 / 1;
-            max-width: 320px;
-            background: rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border-radius: var(--radius-xl);
-            border-top: 1px solid rgba(0, 0, 0, 0.8);
-            border-left: 1px solid rgba(0, 0, 0, 0.4);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.4);
-            border-right: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 
-                inset 0 15px 40px rgba(0, 0, 0, 0.6),
-                0 20px 40px rgba(0, 0, 0, 0.3);
-            position: relative;
-            overflow: hidden;
+        /* ==========================================================================
+           5. CAMERA VIEWPORT
+           ========================================================================== */
+        .camera-section {
+            padding: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
+            flex-direction: column;
         }
 
-        .webcam-mount-point {
+        .camera-wrapper {
+            width: 100%;
+            max-width: 300px;
+            aspect-ratio: 1 / 1;
+            background: rgba(0,0,0,0.5);
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.2);
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        #webcam-container {
             width: 100%;
             height: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
             opacity: 0;
-            transition: opacity 1s ease;
-            transform: scale(1.02); /* Removes edge bleeding */
+            transition: opacity 0.5s ease;
         }
 
-        .webcam-mount-point.active {
+        #webcam-container.active {
             opacity: 1;
         }
 
-        .webcam-mount-point canvas {
+        /* Forces canvas to fit container smoothly */
+        #webcam-container canvas {
             width: 100% !important;
             height: 100% !important;
             object-fit: cover !important;
-            transform: scaleX(-1); /* Mirror view for user-facing camera */
-            border-radius: calc(var(--radius-xl) - 2px);
+            transform: scaleX(-1);
+            border-radius: 20px;
         }
 
-        /* Sci-Fi Overlay & Scan Line */
-        .scanner-hud {
+        .scan-line {
             position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            border-radius: var(--radius-xl);
-            pointer-events: none;
-            z-index: 5;
-            box-shadow: inset 0 0 0 2px rgba(255,255,255,0.1);
-        }
-
-        .laser-sweep {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: #ffffff;
-            box-shadow: 
-                0 0 15px #ffffff,
-                0 0 30px var(--google-blue),
-                0 0 50px var(--google-blue);
+            top: 0; left: 0; width: 100%; height: 3px;
+            background: rgba(255,255,255,0.8);
+            box-shadow: 0 0 15px #fff;
             opacity: 0;
-            z-index: 6;
+            z-index: 5;
         }
 
-        .sensor-frame.scanning .laser-sweep {
-            opacity: 0.8;
-            animation: sweepScan 3.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        .camera-wrapper.active .scan-line {
+            animation: scanAnim 3s linear infinite;
         }
 
-        @keyframes sweepScan {
+        @keyframes scanAnim {
             0% { top: 0%; opacity: 0; }
             10% { opacity: 1; }
             90% { opacity: 1; }
-            100% { top: calc(100% - 4px); opacity: 0; }
+            100% { top: 100%; opacity: 0; }
         }
 
-        /* Reticle Targeting Corners */
-        .targeting-reticle {
+        .loader {
             position: absolute;
-            width: 35px;
-            height: 35px;
-            border-color: rgba(255, 255, 255, 0.9);
-            border-style: solid;
-            opacity: 0;
-            transition: opacity var(--transition-slow);
-            z-index: 7;
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
-        }
-        
-        .sensor-frame.scanning .targeting-reticle { 
-            opacity: 1; 
-        }
-
-        .targeting-reticle-tl { top: 15px; left: 15px; border-width: 4px 0 0 4px; border-top-left-radius: 12px; }
-        .targeting-reticle-tr { top: 15px; right: 15px; border-width: 4px 4px 0 0; border-top-right-radius: 12px; }
-        .targeting-reticle-bl { bottom: 15px; left: 15px; border-width: 0 0 4px 4px; border-bottom-left-radius: 12px; }
-        .targeting-reticle-br { bottom: 15px; right: 15px; border-width: 0 4px 4px 0; border-bottom-right-radius: 12px; }
-
-        /* Hardware Loader */
-        .hardware-loader {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
+            gap: 15px;
             z-index: 10;
-            transition: opacity var(--transition-slow);
         }
 
-        .hardware-loader.hidden {
-            opacity: 0;
-            pointer-events: none;
+        .spinner {
+            width: 40px; height: 40px;
+            border: 4px solid rgba(255,255,255,0.2);
+            border-top: 4px solid #fff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
         }
 
-        .circular-spinner {
-            width: 60px;
-            height: 60px;
-            border: 4px solid rgba(255,255,255,0.1);
-            border-top-color: #ffffff;
-            border-radius: var(--radius-round);
-            animation: spinAction 1s cubic-bezier(0.5, 0.1, 0.4, 0.9) infinite;
-            margin-bottom: var(--spacing-md);
-        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
 
-        @keyframes spinAction {
-            to { transform: rotate(360deg); }
-        }
-
-        .loader-message {
-            color: #ffffff;
-            font-size: var(--font-size-sm);
-            font-weight: var(--font-weight-semibold);
-            letter-spacing: 0.05em;
-            text-shadow: 0 2px 5px rgba(0,0,0,0.6);
-        }
-
-        /* ----------------------------------------------------------------------
-           8. RESULTS & DYNAMIC LABELS (Ensuring full visibility)
-           ---------------------------------------------------------------------- */
-        .metrics-dashboard {
+        /* ==========================================================================
+           6. RESULTS DASHBOARD
+           ========================================================================== */
+        .results-section {
             flex-grow: 1;
-            padding: 0 var(--spacing-lg) var(--spacing-lg);
-            /* Modified to ensure ALL items are visible always, flex sizing */
+            padding: 10px 20px 20px;
             display: flex;
             flex-direction: column;
-            justify-content: center; /* Centered in available space */
-            gap: var(--spacing-md);
-            position: relative;
-            z-index: 20;
-            overflow: visible; /* Prevent hiding */
-            min-height: 180px; /* Ensure space for at least 2 cards */
+            gap: 15px;
+            overflow: visible; /* Ensure cards are never hidden */
         }
 
-        .classification-card {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border-top: 1px solid rgba(255, 255, 255, 0.5);
-            border-left: 1px solid rgba(255, 255, 255, 0.3);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.15);
-            border-right: 1px solid rgba(0, 0, 0, 0.15);
-            border-radius: var(--radius-lg);
-            padding: var(--spacing-md) var(--spacing-lg);
+        .class-card {
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 15px;
+            padding: 15px;
             display: flex;
             flex-direction: column;
-            gap: var(--spacing-sm);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            order: 99;
-            flex-shrink: 0; /* Ensures cards do not get crushed */
+            gap: 10px;
+            transition: all 0.3s ease;
             width: 100%;
         }
 
-        .classification-card.prime-candidate {
-            background: rgba(255, 255, 255, 0.28);
-            transform: scale(1.03);
-            box-shadow: 
-                0 20px 40px rgba(0,0,0,0.25), 
-                inset 0 0 0 1px rgba(255,255,255,0.6);
-            z-index: 2;
-        }
-
-        .card-header-row {
+        .class-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .class-title-text {
-            font-size: var(--font-size-md);
-            font-weight: var(--font-weight-bold);
-            color: #ffffff;
-            text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+        .class-name {
+            font-size: 16px;
+            font-weight: 700;
             text-transform: capitalize;
-            letter-spacing: 0.02em;
         }
 
-        .confidence-badge {
-            font-size: var(--font-size-md);
-            font-weight: var(--font-weight-extrabold);
-            color: #ffffff;
-            background: rgba(0,0,0,0.25);
-            padding: 4px 12px;
-            border-radius: var(--radius-md);
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
-            border: 1px solid rgba(255,255,255,0.15);
-            font-variant-numeric: tabular-nums;
-            min-width: 70px;
-            text-align: right;
+        .class-score {
+            font-size: 16px;
+            font-weight: 800;
+            background: rgba(0,0,0,0.3);
+            padding: 4px 10px;
+            border-radius: 10px;
         }
 
-        .meter-track {
+        .progress-bar {
             width: 100%;
-            height: 12px;
-            background: rgba(0, 0, 0, 0.35);
-            border-radius: 6px;
+            height: 10px;
+            background: rgba(0,0,0,0.4);
+            border-radius: 5px;
             overflow: hidden;
-            box-shadow: inset 0 2px 5px rgba(0,0,0,0.6);
-            position: relative;
         }
 
-        .meter-fill-bar {
+        .progress-fill {
             height: 100%;
             width: 0%;
-            background: #ffffff;
-            border-radius: 6px;
-            transition: width 0.15s linear, background-image 0.3s ease, box-shadow 0.3s ease;
-            box-shadow: 0 0 12px rgba(255,255,255,0.6);
+            background: #fff;
+            border-radius: 5px;
+            transition: width 0.1s linear, background-color 0.3s ease;
         }
 
-        /* Dynamic Google Colored Progress Bars based on Confidence Hierarchy */
-        .tier-high .meter-fill-bar { 
-            background-image: linear-gradient(90deg, var(--google-green), #66bb6a); 
-            box-shadow: 0 0 18px rgba(52, 168, 83, 0.7);
-        }
-        .tier-high .confidence-badge { color: #81c784; }
+        /* Highlight Colors */
+        .card-high { background: rgba(52, 168, 83, 0.4); border-color: #34A853; }
+        .card-high .progress-fill { background: #34A853; box-shadow: 0 0 10px #34A853; }
+        
+        .card-med { background: rgba(251, 188, 5, 0.3); border-color: #FBBC05; }
+        .card-med .progress-fill { background: #FBBC05; box-shadow: 0 0 10px #FBBC05; }
+        
+        .card-low { background: rgba(234, 67, 53, 0.2); }
+        .card-low .progress-fill { background: #EA4335; }
 
-        .tier-med .meter-fill-bar { 
-            background-image: linear-gradient(90deg, var(--google-yellow), #ffca28); 
-            box-shadow: 0 0 18px rgba(251, 188, 5, 0.7);
-        }
-        .tier-med .confidence-badge { color: #ffd54f; }
-
-        .tier-low .meter-fill-bar { 
-            background-image: linear-gradient(90deg, var(--google-red), #ef5350); 
-            box-shadow: 0 0 18px rgba(234, 67, 53, 0.7);
-        }
-        .tier-low .confidence-badge { color: #e57373; }
-
-        /* ----------------------------------------------------------------------
-           9. CONTROL INTERFACE
-           ---------------------------------------------------------------------- */
-        .action-tray {
-            padding: var(--spacing-md) var(--spacing-lg) var(--spacing-xl);
+        /* ==========================================================================
+           7. CONTROLS
+           ========================================================================== */
+        .controls {
+            padding: 20px;
             display: flex;
             justify-content: center;
-            position: relative;
-            z-index: 20;
-            background: linear-gradient(to top, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0) 100%);
-            flex-shrink: 0;
+            border-top: 1px solid rgba(255,255,255,0.1);
         }
 
-        .glass-button-primary {
+        .btn-start {
             width: 100%;
-            max-width: 320px;
-            padding: 20px 24px;
-            border-radius: var(--radius-xl);
-            
-            background: rgba(255, 255, 255, 0.25);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border-top: 1px solid rgba(255, 255, 255, 0.7);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.15);
-            
-            color: #ffffff;
-            font-size: var(--font-size-lg);
-            font-weight: var(--font-weight-bold);
-            letter-spacing: 0.03em;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-            
+            padding: 18px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.25);
+            border: 1px solid rgba(255,255,255,0.5);
+            color: #fff;
+            font-size: 18px;
+            font-weight: bold;
             cursor: pointer;
-            outline: none;
-            box-shadow: 0 12px 30px rgba(0,0,0,0.25);
-            transition: all var(--transition-bounce);
-            
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 12px;
+            backdrop-filter: blur(10px);
+            transition: transform 0.2s, background 0.2s;
         }
 
-        .glass-button-primary:active {
-            transform: scale(0.94) translateY(3px);
-            background: rgba(255, 255, 255, 0.35);
-            box-shadow: 0 6px 15px rgba(0,0,0,0.15);
-        }
+        .btn-start:active { transform: scale(0.95); }
+        .btn-start:disabled { opacity: 0.5; cursor: not-allowed; display: none; }
 
-        .glass-button-primary:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        /* ----------------------------------------------------------------------
-           10. ANIMATION UTILITIES
-           ---------------------------------------------------------------------- */
-        .anim-fade-rise {
-            animation: fadeRise sequence-timing forwards;
-            opacity: 0;
-            transform: translateY(25px);
-        }
-
-        @keyframes fadeRise {
-            0% {
-                opacity: 0;
-                transform: translateY(25px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .display-none-override { 
-            display: none !important; 
-        }
-
-        /* Responsive height fixes for smaller screens */
-        @media (max-height: 700px) {
-            .sensor-frame {
-                max-width: 250px;
-            }
-            .panel-header {
-                padding-top: 20px;
-            }
-        }
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
-    <!-- DOM: Background Environment -->
-    <div class="ambient-environment" id="bg-engine"></div>
-    
-    <!-- DOM: Liquid Light Orbs -->
-    <div class="ambient-orb ambient-orb-primary"></div>
-    <div class="ambient-orb ambient-orb-secondary"></div>
-    <div class="ambient-orb ambient-orb-tertiary"></div>
+    <div class="bg-layer"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
 
-    <!-- DOM: Main Application Container -->
-    <div class="application-root" id="app-root">
-        
-        <!-- DOM: Glass Chassis -->
-        <main class="liquid-glass-chassis" id="chassis">
+    <div class="app-container">
+        <div class="glass-panel">
             
-            <!-- System Status -->
-            <div class="system-status-pill" id="indicator-pill">
-                <div class="status-led"></div>
-                <span class="status-label" id="indicator-text">Idle</span>
+            <div class="header">
+                <h1>Neural Engine</h1>
+                <p>Live Teachable Machine Classification</p>
             </div>
 
-            <!-- Header -->
-            <header class="panel-header anim-fade-rise" style="animation-duration: 0.7s; animation-delay: 0.1s;">
-                <h1 class="panel-title">CoreVision AI</h1>
-                <p class="panel-subtitle">Neural Image Classification Engine</p>
-            </header>
-
-            <!-- Camera Viewport Section -->
-            <section class="viewport-container anim-fade-rise" style="animation-duration: 0.7s; animation-delay: 0.2s;">
-                <div class="sensor-frame" id="sensor-frame">
-                    
-                    <!-- Hardware Booting Overlay -->
-                    <div class="hardware-loader" id="overlay-loader">
-                        <div class="circular-spinner"></div>
-                        <p class="loader-message" id="overlay-message">Allocating Tensor Cores...</p>
+            <div class="camera-section">
+                <div class="camera-wrapper" id="cam-wrapper">
+                    <div class="loader hidden" id="loader">
+                        <div class="spinner"></div>
+                        <span id="loader-text">Loading Model...</span>
                     </div>
-                    
-                    <!-- Sci-Fi Scanner Elements -->
-                    <div class="scanner-hud">
-                        <div class="laser-sweep"></div>
-                        <div class="targeting-reticle targeting-reticle-tl"></div>
-                        <div class="targeting-reticle targeting-reticle-tr"></div>
-                        <div class="targeting-reticle targeting-reticle-bl"></div>
-                        <div class="targeting-reticle targeting-reticle-br"></div>
-                    </div>
-
-                    <!-- Video Stream Mount -->
-                    <div class="webcam-mount-point" id="video-mount"></div>
+                    <div class="scan-line"></div>
+                    <div id="webcam-container"></div>
                 </div>
-            </section>
+            </div>
 
-            <!-- Results Dashboard Section -->
-            <!-- Ensures tags are always visible via flexbox layout -->
-            <section class="metrics-dashboard anim-fade-rise" id="metrics-dashboard" style="animation-duration: 0.7s; animation-delay: 0.3s;">
-                <!-- Placeholder Skeleton Cards (Will be replaced dynamically) -->
-                <article class="classification-card" style="opacity: 0.4;">
-                    <div class="card-header-row">
-                        <span class="class-title-text" style="background: rgba(255,255,255,0.2); color: transparent; border-radius: 4px;">Initialize Model</span>
-                        <span class="confidence-badge" style="background: transparent; border: none; color: transparent;">0.0%</span>
-                    </div>
-                    <div class="meter-track"><div class="meter-fill-bar" style="width: 0%;"></div></div>
-                </article>
-                <article class="classification-card" style="opacity: 0.2;">
-                    <div class="card-header-row">
-                        <span class="class-title-text" style="background: rgba(255,255,255,0.2); color: transparent; border-radius: 4px;">Initialize Model</span>
-                        <span class="confidence-badge" style="background: transparent; border: none; color: transparent;">0.0%</span>
-                    </div>
-                    <div class="meter-track"><div class="meter-fill-bar" style="width: 0%;"></div></div>
-                </article>
-            </section>
+            <!-- Dashboard where dynamic cards will be appended -->
+            <div class="results-section" id="results-container">
+                <!-- Javascript will inject cards here -->
+            </div>
 
-            <!-- Controls Section -->
-            <section class="action-tray anim-fade-rise" style="animation-duration: 0.7s; animation-delay: 0.4s;">
-                <button class="glass-button-primary" id="btn-ignite">
-                    <!-- Inline SVG Icon for precision and speed -->
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
-                    </svg>
-                    <span>Ignite Engine</span>
-                </button>
-            </section>
+            <div class="controls">
+                <button class="btn-start" id="start-btn">Start Camera & AI</button>
+            </div>
 
-        </main>
+        </div>
     </div>
 
-    <!-- 
-      ==========================================================================
-      JAVASCRIPT ARCHITECTURE & MACHINE LEARNING INTEGRATION
-      ========================================================================== 
-    -->
     <script>
         /**
-         * ======================================================================
-         * CORE CONFIGURATION REGISTRY
-         * Defines the bounds and tuning parameters for the machine learning model
-         * ======================================================================
+         * ------------------------------------------------------------------
+         * CORE LOGIC: Teachable Machine Implementation
+         * ------------------------------------------------------------------
          */
-        const AppConfiguration = {
-            // Teachable Machine Published Link Endpoint
-            NetworkEndpoint: "https://teachablemachine.withgoogle.com/models/DPuAl5UGa/",
-            
-            // Optical Sensor Resolution Constraints
-            SensorWidth: 224, 
-            SensorHeight: 224,
-            
-            // Classification Categorization Thresholds
-            Thresholds: {
-                AlphaTier: 0.85,
-                BetaTier: 0.40
-            },
-            
-            // Software Execution Timing bounds
-            TargetFPS: 60,
-            
-            // Logging verbosity level (0=silence, 1=errors, 2=info, 3=debug)
-            LogLevel: 2
-        };
+        const URL = "https://teachablemachine.withgoogle.com/models/DPuAl5UGa/";
+        let model, webcam, maxPredictions;
+        let isRunning = false;
+        
+        // Cache DOM elements
+        const startBtn = document.getElementById("start-btn");
+        const loader = document.getElementById("loader");
+        const loaderText = document.getElementById("loader-text");
+        const webcamContainer = document.getElementById("webcam-container");
+        const resultsContainer = document.getElementById("results-container");
+        const camWrapper = document.getElementById("cam-wrapper");
 
-        /**
-         * ======================================================================
-         * STATE MANAGEMENT SYSTEM
-         * Centralized store for volatile runtime variables
-         * ======================================================================
-         */
-        const RuntimeState = {
-            NeuralModel: null,
-            HardwareSensor: null,
-            ClassCount: 0,
-            ClassIdentifiers: [],
-            EngineRunning: false,
-            RenderSequenceID: null,
-            TimestampLastFrame: 0,
-            DOMNodes: {} // O(1) Access mapping for high-frequency updates
-        };
+        // UI Store for fast updating
+        const classElements = {};
 
-        /**
-         * ======================================================================
-         * DOM NODE CACHE REGISTRY
-         * Caching DOM queries to prevent layout thrashing and slow lookups
-         * ======================================================================
-         */
-        const InterfaceCache = {
-            ActionTrigger: document.getElementById('btn-ignite'),
-            HUDLoaderOverlay: document.getElementById('overlay-loader'),
-            HUDLoaderMessage: document.getElementById('overlay-message'),
-            VideoMountPoint: document.getElementById('video-mount'),
-            DashboardContainer: document.getElementById('metrics-dashboard'),
-            StatusPill: document.getElementById('indicator-pill'),
-            StatusText: document.getElementById('indicator-text'),
-            SensorFrame: document.getElementById('sensor-frame')
-        };
+        startBtn.addEventListener("click", init);
 
-        /**
-         * ======================================================================
-         * UTILITY LIBRARIES
-         * Helper functions for formatting, sanitization, and logging
-         * ======================================================================
-         */
-        const Utilities = {
-            /**
-             * Formats a raw floating point probability into a UX-friendly string
-             * @param {number} probability - Raw float from 0.0 to 1.0
-             * @returns {string} - Formatted percentage (e.g. "98.5%")
-             */
-            FormatProbability: (probability) => {
-                return (probability * 100).toFixed(1) + "%";
-            },
-
-            /**
-             * Cleans arbitrary class names into safe CSS/HTML selectors
-             * @param {string} rawIdentifier - Unsafe string
-             * @returns {string} - Safe lowercase string
-             */
-            SanitizeIdentifier: (rawIdentifier) => {
-                return rawIdentifier.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase();
-            },
-
-            /**
-             * Internal system logger wrapper
-             * @param {number} level - Message severity
-             * @param {string} context - Log context
-             * @param {any} payload - Optional data
-             */
-            Log: (level, context, payload = null) => {
-                if (level <= AppConfiguration.LogLevel) {
-                    const ts = new Date().toISOString();
-                    const prefix = `[CoreVision:${ts}] [${context}]`;
-                    if (level === 1) console.error(prefix, payload || '');
-                    if (level === 2) console.info(prefix, payload || '');
-                    if (level === 3) console.debug(prefix, payload || '');
-                }
-            }
-        };
-
-        /**
-         * ======================================================================
-         * SYSTEM BOOTSTRAPPER SEQUENCE
-         * Orchestrates the initialization of the ML network and camera hardware
-         * ======================================================================
-         */
-        const SystemBootstrapper = async () => {
-            if (RuntimeState.EngineRunning) return;
+        async function init() {
+            if (isRunning) return;
+            startBtn.disabled = true;
+            loader.classList.remove("hidden");
             
             try {
-                Utilities.Log(2, "BootSequence", "Initiating System Startup...");
-                UpdateInterfaceState(true, "Synchronizing Neural Weights...");
-                
-                // 1. Fetch Neural Network Topologies and Weights
-                const topologyURL = AppConfiguration.NetworkEndpoint + "model.json";
-                const schemaURL = AppConfiguration.NetworkEndpoint + "metadata.json";
-                
-                RuntimeState.NeuralModel = await tmImage.load(topologyURL, schemaURL);
-                RuntimeState.ClassCount = RuntimeState.NeuralModel.getTotalClasses();
-                RuntimeState.ClassIdentifiers = RuntimeState.NeuralModel.getClassLabels();
-                
-                Utilities.Log(2, "BootSequence", `Model Loaded successfully. Total Classes: ${RuntimeState.ClassCount}`);
-                
-                UpdateInterfaceState(true, "Negotiating Hardware Access...");
-                
-                // 2. Instantiate Optical Hardware Interface
-                const mirrorOutput = true; 
-                RuntimeState.HardwareSensor = new tmImage.Webcam(
-                    AppConfiguration.SensorWidth, 
-                    AppConfiguration.SensorHeight, 
-                    mirrorOutput
-                );
-                
-                // Invoke browser prompt for camera access (Mobile optimized facingMode)
-                await RuntimeState.HardwareSensor.setup({ facingMode: "user" }); 
-                
-                UpdateInterfaceState(true, "Buffering Video Streams...");
-                await RuntimeState.HardwareSensor.play();
-                
-                // 3. Inject Canvas into the DOM safely
-                InterfaceCache.VideoMountPoint.innerHTML = ''; 
-                InterfaceCache.VideoMountPoint.appendChild(RuntimeState.HardwareSensor.canvas);
-                
-                // 4. Generate the Classification UI Graph dynamically
-                BuildClassificationGraph(RuntimeState.ClassIdentifiers);
-                
-                // 5. Finalize State and Activate Engine
-                RuntimeState.EngineRunning = true;
-                UpdateInterfaceState(false);
-                ToggleSystemReadiness(true);
-                InterfaceCache.SensorFrame.classList.add('scanning');
-                
-                Utilities.Log(2, "BootSequence", "Startup Complete. Handing off to Tensor Execution Loop.");
-                
-                // 6. Enter Main Thread Rendering Loop
-                RuntimeState.RenderSequenceID = window.requestAnimationFrame(TensorExecutionLoop);
+                // 1. Load Model
+                loaderText.innerText = "Downloading Model...";
+                const modelURL = URL + "model.json";
+                const metadataURL = URL + "metadata.json";
+                model = await tmImage.load(modelURL, metadataURL);
+                maxPredictions = model.getTotalClasses();
 
-            } catch (systemException) {
-                Utilities.Log(1, "BootSequence Failure", systemException);
+                // 2. Setup Webcam
+                loaderText.innerText = "Starting Camera...";
+                const flip = true; 
+                // Set fixed small resolution to guarantee high framerate and prevent crashing
+                webcam = new tmImage.Webcam(224, 224, flip); 
                 
-                UpdateInterfaceState(false);
-                ToggleSystemReadiness(false);
+                // Request camera explicitly
+                await webcam.setup({ facingMode: "user" }); 
                 
-                // Alerting user of failure
-                alert("Critical System Fault: Hardware access was denied or the network model failed to load. Please verify permissions and HTTPS connection.");
+                loaderText.innerText = "Buffering Stream...";
+                await webcam.play();
+
+                // 3. Mount Canvas
+                webcamContainer.innerHTML = "";
+                webcamContainer.appendChild(webcam.canvas);
                 
-                // Reset Ignition Trigger for Retry
-                InterfaceCache.ActionTrigger.disabled = false;
-                InterfaceCache.ActionTrigger.innerHTML = `
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M21.5 2v6h-6M2.13 15.57a10 10 0 1 0 3.43-5.35l-5.32 5.35"></path>
-                    </svg>
-                    <span>Reboot Engine</span>
-                `;
+                // 4. Build UI Cards
+                createCards(model.getClassLabels());
+
+                // 5. Finalize Setup
+                loader.classList.add("hidden");
+                webcamContainer.classList.add("active");
+                camWrapper.classList.add("active");
+                startBtn.classList.add("hidden");
+                isRunning = true;
+
+                // 6. Start Loop
+                window.requestAnimationFrame(loop);
+
+            } catch (err) {
+                console.error(err);
+                loaderText.innerText = "Camera Error. Check Permissions.";
+                startBtn.disabled = false;
+                startBtn.innerText = "Retry";
             }
-        };
+        }
 
-        /**
-         * ======================================================================
-         * CORE EXECUTION LOOP
-         * Self-calling high-frequency rendering loop. 
-         * Async/Await pattern forces the main thread to breathe between frames.
-         * ======================================================================
-         */
-        const TensorExecutionLoop = async (performanceTimestamp) => {
-            if (!RuntimeState.EngineRunning) return;
+        async function loop() {
+            if (!isRunning) return;
+            webcam.update(); // Update the webcam frame
+            await predict(); // Wait for prediction
+            window.requestAnimationFrame(loop);
+        }
 
-            // Optional Frame Delta Limiter logic
-            const timeElapsed = performanceTimestamp - RuntimeState.TimestampLastFrame;
-            const thresholdDelta = 1000 / AppConfiguration.TargetFPS;
-
-            if (timeElapsed > thresholdDelta) {
-                // Adjust timestamp to catch up smoothly
-                RuntimeState.TimestampLastFrame = performanceTimestamp - (timeElapsed % thresholdDelta);
-                
-                // Request next frame from hardware
-                RuntimeState.HardwareSensor.update(); 
-                
-                // Hand over to ML processing block
-                await ComputeInferenceMatrix(); 
-            }
+        async function predict() {
+            if (!model || !webcam) return;
             
-            // Recurse execution
-            RuntimeState.RenderSequenceID = window.requestAnimationFrame(TensorExecutionLoop);
-        };
-
-        /**
-         * ======================================================================
-         * INFERENCE COMPUTATION
-         * Evaluates current frame against the model and maps results to the DOM
-         * ======================================================================
-         */
-        const ComputeInferenceMatrix = async () => {
-            // Null safety check
-            if (!RuntimeState.NeuralModel || !RuntimeState.HardwareSensor) return;
-
-            // Execute prediction matrix against current canvas buffer
-            const rawPredictions = await RuntimeState.NeuralModel.predict(RuntimeState.HardwareSensor.canvas);
+            // Predict based on current frame
+            const predictions = await model.predict(webcam.canvas);
             
-            // Iterate over generated probabilities
-            for (let index = 0; index < RuntimeState.ClassCount; index++) {
-                const currentPrediction = rawPredictions[index];
-                const cleanKey = Utilities.SanitizeIdentifier(currentPrediction.className);
-                const floatProbability = currentPrediction.probability;
-                const formattedString = Utilities.FormatProbability(floatProbability);
+            for (let i = 0; i < maxPredictions; i++) {
+                const pred = predictions[i];
+                const cleanName = pred.className.replace(/[^a-zA-Z0-9]/g, '');
+                const ui = classElements[cleanName];
                 
-                // Retrieve mapped DOM nodes from memory cache
-                const activeUI = RuntimeState.DOMNodes[cleanKey];
-                
-                // Skip if mapping failed
-                if (!activeUI) continue;
+                if (!ui) continue;
 
-                // 1. Text & Graph Update
-                activeUI.NodeText.innerText = formattedString;
-                activeUI.NodeFill.style.width = formattedString;
+                // Calculate percentage
+                const prob = pred.probability;
+                const percent = (prob * 100).toFixed(1);
 
-                // 2. Volumetric Styling Update
-                // Clear existing tier classes
-                activeUI.NodeCard.classList.remove('tier-high', 'tier-med', 'tier-low', 'prime-candidate');
-                
-                // Apply contextual visual representation based on established thresholds
-                if (floatProbability >= AppConfiguration.Thresholds.AlphaTier) {
-                    activeUI.NodeCard.classList.add('tier-high', 'prime-candidate');
-                    activeUI.NodeCard.style.order = 1; // Bubble to top priority
-                } 
-                else if (floatProbability >= AppConfiguration.Thresholds.BetaTier) {
-                    activeUI.NodeCard.classList.add('tier-med');
-                    activeUI.NodeCard.style.order = 2; // Mid priority
-                } 
-                else {
-                    activeUI.NodeCard.classList.add('tier-low');
-                    activeUI.NodeCard.style.order = 3; // Bottom priority
+                // Update text and bar
+                ui.score.innerText = `${percent}%`;
+                ui.fill.style.width = `${percent}%`;
+
+                // Reset styling
+                ui.card.className = "class-card";
+
+                // Apply dynamic CSS based on confidence
+                if (prob > 0.80) {
+                    ui.card.classList.add("card-high");
+                    ui.card.style.order = 1; // Move to top
+                } else if (prob > 0.40) {
+                    ui.card.classList.add("card-med");
+                    ui.card.style.order = 2; // Move to middle
+                } else {
+                    ui.card.classList.add("card-low");
+                    ui.card.style.order = 3; // Move to bottom
                 }
             }
-        };
+        }
 
-        /**
-         * ======================================================================
-         * DYNAMIC USER INTERFACE GENERATOR
-         * Constructs the classification dashboard dynamically from the fetched metadata.
-         * Ensures visibility by avoiding scroll hiding (using flex sizing).
-         * ======================================================================
-         */
-        const BuildClassificationGraph = (classLabelArray) => {
-            Utilities.Log(2, "UIBuilder", "Constructing DOM Nodes for Categories...");
+        function createCards(labels) {
+            resultsContainer.innerHTML = ""; // Clear existing
             
-            // Purge skeletal placeholders
-            InterfaceCache.DashboardContainer.innerHTML = ''; 
-            
-            // Reset lookup dictionary
-            RuntimeState.DOMNodes = {}; 
-
-            classLabelArray.forEach((categoryName, offset) => {
-                const sanitizedKey = Utilities.SanitizeIdentifier(categoryName);
+            labels.forEach((label) => {
+                const cleanName = label.replace(/[^a-zA-Z0-9]/g, '');
                 
-                // Node: Outer Container Article
-                const nodeCard = document.createElement('article');
-                nodeCard.className = 'classification-card anim-fade-rise';
-                nodeCard.id = `card-graph-${sanitizedKey}`;
-                // Stagger animations based on index for smooth cascade effect
-                nodeCard.style.animationDelay = `${(offset * 0.15) + 0.1}s`;
+                // Card Wrapper
+                const card = document.createElement("div");
+                card.className = "class-card";
+                card.id = `card-${cleanName}`;
 
-                // Node: Title & Data Row
-                const nodeHeader = document.createElement('div');
-                nodeHeader.className = 'card-header-row';
-
-                // Node: Categorization Title
-                const nodeTitle = document.createElement('span');
-                nodeTitle.className = 'class-title-text';
-                nodeTitle.innerText = categoryName;
-
-                // Node: Confidence Numerical Output
-                const nodeConfidence = document.createElement('span');
-                nodeConfidence.className = 'confidence-badge';
-                nodeConfidence.id = `data-val-${sanitizedKey}`;
-                nodeConfidence.innerText = '0.0%';
-
-                // Assemble Row
-                nodeHeader.appendChild(nodeTitle);
-                nodeHeader.appendChild(nodeConfidence);
-
-                // Node: Graphical Meter Container
-                const nodeTrack = document.createElement('div');
-                nodeTrack.className = 'meter-track';
-
-                // Node: Graphical Meter Fill Indicator
-                const nodeFill = document.createElement('div');
-                nodeFill.className = 'meter-fill-bar';
-                nodeFill.id = `data-fill-${sanitizedKey}`;
-
-                // Assemble Graph
-                nodeTrack.appendChild(nodeFill);
-
-                // Finalize Card Assembly
-                nodeCard.appendChild(nodeHeader);
-                nodeCard.appendChild(nodeTrack);
+                // Header (Name + Score)
+                const header = document.createElement("div");
+                header.className = "class-header";
                 
-                // Inject to live DOM
-                InterfaceCache.DashboardContainer.appendChild(nodeCard);
+                const title = document.createElement("span");
+                title.className = "class-name";
+                title.innerText = label;
 
-                // Populate fast-access Memory Cache for execution loop
-                RuntimeState.DOMNodes[sanitizedKey] = {
-                    NodeCard: nodeCard,
-                    NodeText: nodeConfidence,
-                    NodeFill: nodeFill
+                const score = document.createElement("span");
+                score.className = "class-score";
+                score.innerText = "0.0%";
+
+                header.appendChild(title);
+                header.appendChild(score);
+
+                // Progress Bar
+                const track = document.createElement("div");
+                track.className = "progress-bar";
+
+                const fill = document.createElement("div");
+                fill.className = "progress-fill";
+
+                track.appendChild(fill);
+
+                // Build full card
+                card.appendChild(header);
+                card.appendChild(track);
+
+                // Mount to DOM
+                resultsContainer.appendChild(card);
+
+                // Store references for rapid updating in loop
+                classElements[cleanName] = {
+                    card: card,
+                    score: score,
+                    fill: fill
                 };
             });
-            
-            Utilities.Log(2, "UIBuilder", "Graph Construction complete.");
-        };
-
-        /**
-         * ======================================================================
-         * INTERFACE STATE MUTATORS
-         * Helpers that control broad visual states of the application
-         * ======================================================================
-         */
-
-        /**
-         * Toggles the central overlay loading screen
-         * @param {boolean} active - Should the loader show
-         * @param {string} payloadMessage - Accompanying message
-         */
-        const UpdateInterfaceState = (active, payloadMessage = "") => {
-            if (active) {
-                // Disable trigger and show internal spinner
-                InterfaceCache.ActionTrigger.disabled = true;
-                InterfaceCache.ActionTrigger.innerHTML = `
-                    <div class="circular-spinner" style="width: 24px; height: 24px; margin: 0; border-width: 2px;"></div>
-                    <span>Initializing...</span>
-                `;
-                
-                // Present Overlay
-                InterfaceCache.HUDLoaderOverlay.classList.remove('hidden');
-                InterfaceCache.HUDLoaderMessage.innerText = payloadMessage;
-            } else {
-                // Hide Overlay
-                InterfaceCache.HUDLoaderOverlay.classList.add('hidden');
-                
-                // Completely remove ignite button from layout
-                InterfaceCache.ActionTrigger.classList.add('display-none-override');
-                
-                // Reveal Active Canvas Viewport
-                InterfaceCache.VideoMountPoint.classList.add('active');
-            }
-        };
-
-        /**
-         * Updates the global system telemetry pill in the corner
-         * @param {boolean} systemNominal - Represents successful startup
-         */
-        const ToggleSystemReadiness = (systemNominal) => {
-            if (systemNominal) {
-                InterfaceCache.StatusPill.classList.add('online');
-                InterfaceCache.StatusText.innerText = 'System Active';
-            } else {
-                InterfaceCache.StatusPill.classList.remove('online');
-                InterfaceCache.StatusText.innerText = 'System Fault';
-            }
-        };
-
-        /**
-         * ======================================================================
-         * HARDWARE EVENT LISTENERS
-         * Binds logic to user interaction points
-         * ======================================================================
-         */
-        
-        // Bind primary ignition logic to action tray trigger
-        InterfaceCache.ActionTrigger.addEventListener('click', SystemBootstrapper);
-
-        // Security / Polish: Stop the stream gracefully if user backgrounds or unloads page
-        window.addEventListener('beforeunload', () => {
-            if (RuntimeState.HardwareSensor && RuntimeState.HardwareSensor.stop) {
-                RuntimeState.HardwareSensor.stop();
-            }
-        });
-
+        }
     </script>
 </body>
 </html>
