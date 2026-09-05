@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#0f172a">
-    <title>Advanced AI Vision Classification</title>
+    <meta name="theme-color" content="#4285F4">
+    <title>Advanced iOS Liquid Glass AI Vision</title>
 
     <!-- TensorFlow.js and Teachable Machine Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
@@ -16,233 +16,219 @@
         /* ==========================================================================
            CSS RESET & BASE TYPOGRAPHY
            ========================================================================== */
-        html, body, div, span, applet, object, iframe,
-        h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-        a, abbr, acronym, address, big, cite, code,
-        del, dfn, em, img, ins, kbd, q, s, samp,
-        small, strike, strong, sub, sup, tt, var,
-        b, u, i, center,
-        dl, dt, dd, ol, ul, li,
-        fieldset, form, label, legend,
-        table, caption, tbody, tfoot, thead, tr, th, td,
-        article, aside, canvas, details, embed, 
-        figure, figcaption, footer, header, hgroup, 
-        menu, nav, output, ruby, section, summary,
-        time, mark, audio, video {
+        *, *::before, *::after {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            border: 0;
-            font-size: 100%;
-            font: inherit;
-            vertical-align: baseline;
-            box-sizing: border-box;
         }
 
-        /* HTML5 display-role reset for older browsers */
-        article, aside, details, figcaption, figure, 
-        footer, header, hgroup, menu, nav, section {
-            display: block;
-        }
-
-        body {
-            line-height: 1.5;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        html, body {
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
-            background-color: #0f172a;
-            color: #ffffff;
-            overflow: hidden; /* Prevent scrolling, act like an app */
-            width: 100vw;
-            height: 100vh;
-            position: relative;
-        }
-
-        ol, ul {
-            list-style: none;
-        }
-
-        blockquote, q {
-            quotes: none;
-        }
-
-        blockquote:before, blockquote:after,
-        q:before, q:after {
-            content: '';
-            content: none;
-        }
-
-        table {
-            border-collapse: collapse;
-            border-spacing: 0;
+            background-color: #000;
         }
 
         /* ==========================================================================
-           CUSTOM PROPERTIES (VARIABLES)
+           GOOGLE GRADIENT BACKGROUND SYSTEM
            ========================================================================== */
-        :root {
-            --glass-bg: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --glass-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            --glass-blur: blur(24px);
-            
-            --primary-accent: #3b82f6;
-            --success-color: #10b981;
-            --warning-color: #f59e0b;
-            --danger-color: #ef4444;
-            --neutral-color: #64748b;
-            
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            
-            --radius-lg: 32px;
-            --radius-md: 20px;
-            --radius-sm: 12px;
-            
-            --spacing-xs: 4px;
-            --spacing-sm: 8px;
-            --spacing-md: 16px;
-            --spacing-lg: 24px;
-            --spacing-xl: 32px;
-            --spacing-xxl: 48px;
-
-            --transition-fast: 0.15s ease-out;
-            --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        /* ==========================================================================
-           BACKGROUND CANVAS SYSTEM (Particle Engine Overlay)
-           ========================================================================== */
-        #bg-canvas {
-            position: absolute;
+        .google-gradient-bg {
+            position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
             z-index: 0;
-            pointer-events: none;
-            background: radial-gradient(circle at 50% 50%, #1e293b 0%, #0f172a 100%);
+            /* Google Colors: Blue, Red, Yellow, Green */
+            background: linear-gradient(
+                -45deg, 
+                #4285F4, 
+                #EA4335, 
+                #FBBC05, 
+                #34A853,
+                #4285F4,
+                #EA4335
+            );
+            background-size: 400% 400%;
+            animation: googleGradientFlow 12s ease infinite;
         }
 
-        /* Gradient orbs for visual depth */
-        .ambient-orb {
+        @keyframes googleGradientFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Ambient floating light orbs to enhance the liquid glass reflections */
+        .light-orb {
             position: absolute;
             border-radius: 50%;
-            filter: blur(80px);
+            filter: blur(90px);
+            opacity: 0.6;
             z-index: 1;
-            opacity: 0.5;
-            animation: orbFloat 20s infinite alternate ease-in-out;
+            mix-blend-mode: screen;
+            animation: orbFloat 25s infinite alternate ease-in-out;
         }
 
-        .orb-1 {
-            width: 400px;
-            height: 400px;
-            background: rgba(59, 130, 246, 0.3);
-            top: -100px;
-            left: -100px;
+        .orb-blue {
+            width: 50vw; height: 50vw;
+            background: radial-gradient(circle, #ffffff 0%, #4285F4 100%);
+            top: -10%; left: -10%;
         }
 
-        .orb-2 {
-            width: 500px;
-            height: 500px;
-            background: rgba(139, 92, 246, 0.2);
-            bottom: -200px;
-            right: -100px;
-            animation-delay: -10s;
-        }
-        
-        .orb-3 {
-            width: 300px;
-            height: 300px;
-            background: rgba(16, 185, 129, 0.15);
-            top: 40%;
-            left: 60%;
+        .orb-red {
+            width: 60vw; height: 60vw;
+            background: radial-gradient(circle, #ffffff 0%, #EA4335 100%);
+            bottom: -20%; right: -10%;
             animation-delay: -5s;
+        }
+
+        .orb-yellow {
+            width: 40vw; height: 40vw;
+            background: radial-gradient(circle, #ffffff 0%, #FBBC05 100%);
+            top: 40%; left: 30%;
+            animation-delay: -10s;
         }
 
         @keyframes orbFloat {
             0% { transform: translate(0, 0) scale(1); }
-            33% { transform: translate(30px, -50px) scale(1.1); }
-            66% { transform: translate(-20px, 20px) scale(0.9); }
+            33% { transform: translate(15vw, -10vh) scale(1.2); }
+            66% { transform: translate(-10vw, 15vh) scale(0.8); }
             100% { transform: translate(0, 0) scale(1); }
         }
 
         /* ==========================================================================
-           MAIN APPLICATION LAYOUT (Glassmorphism)
+           IOS LIQUID GLASSMORPHISM SYSTEM
            ========================================================================== */
         .app-wrapper {
             position: relative;
             z-index: 10;
-            width: 100%;
-            height: 100%;
+            width: 100vw;
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: var(--spacing-md);
+            padding: 20px;
+            perspective: 1000px;
         }
 
-        .glass-panel {
+        .liquid-glass-panel {
             width: 100%;
-            max-width: 480px;
+            max-width: 420px;
             height: 100%;
-            max-height: 880px;
-            background: var(--glass-bg);
-            backdrop-filter: var(--glass-blur);
-            -webkit-backdrop-filter: var(--glass-blur);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-lg);
-            box-shadow: var(--glass-shadow);
+            max-height: 850px;
+            
+            /* Core Liquid Glass Properties */
+            background: linear-gradient(
+                135deg, 
+                rgba(255, 255, 255, 0.25) 0%, 
+                rgba(255, 255, 255, 0.05) 100%
+            );
+            backdrop-filter: blur(40px) saturate(200%);
+            -webkit-backdrop-filter: blur(40px) saturate(200%);
+            
+            /* Highlight borders for 3D liquid edge effect */
+            border-top: 1px solid rgba(255, 255, 255, 0.6);
+            border-left: 1px solid rgba(255, 255, 255, 0.4);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            
+            border-radius: 40px;
+            
+            /* Complex shadowing for depth */
+            box-shadow: 
+                0 30px 60px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.5),
+                inset 0 0 20px rgba(255, 255, 255, 0.2);
+            
             display: flex;
             flex-direction: column;
             overflow: hidden;
             position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.3s ease;
+        }
+
+        /* Inner light reflection simulating thick glass */
+        .liquid-glass-panel::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 120px;
+            background: linear-gradient(
+                to bottom, 
+                rgba(255,255,255,0.3) 0%, 
+                rgba(255,255,255,0) 100%
+            );
+            pointer-events: none;
+            z-index: 15;
+            border-top-left-radius: 40px;
+            border-top-right-radius: 40px;
         }
 
         /* ==========================================================================
            HEADER COMPONENT
            ========================================================================== */
         .header {
-            padding: var(--spacing-lg) var(--spacing-lg) var(--spacing-md);
+            padding: 30px 24px 20px;
             text-align: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            flex-shrink: 0;
+            position: relative;
+            z-index: 20;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
         }
 
         .header h1 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            letter-spacing: -0.025em;
-            background: linear-gradient(to right, #60a5fa, #a78bfa);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: var(--spacing-xs);
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: #ffffff;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            margin-bottom: 6px;
         }
 
         .header p {
-            font-size: 0.875rem;
-            color: var(--text-muted);
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.8);
             font-weight: 500;
+            text-shadow: 0 1px 4px rgba(0,0,0,0.2);
         }
 
         /* ==========================================================================
-           CAMERA VIEWPORT (Optimized for performance)
+           CAMERA VIEWPORT (Liquid UI)
            ========================================================================== */
         .viewport-section {
-            padding: var(--spacing-lg);
+            padding: 24px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            flex-shrink: 0;
+            position: relative;
+            z-index: 20;
         }
 
         .camera-frame {
             width: 100%;
-            aspect-ratio: 1 / 1; /* Match the 224x224 model aspect */
-            max-width: 280px;
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: var(--radius-md);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: inset 0 4px 20px rgba(0, 0, 0, 0.5);
+            aspect-ratio: 1 / 1;
+            max-width: 320px;
+            
+            /* Nested glass effect */
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            
+            border-radius: 32px;
+            border-top: 1px solid rgba(0, 0, 0, 0.6);
+            border-left: 1px solid rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            
+            box-shadow: 
+                inset 0 10px 30px rgba(0, 0, 0, 0.5),
+                0 15px 30px rgba(0, 0, 0, 0.2);
+                
             position: relative;
             overflow: hidden;
             display: flex;
@@ -250,7 +236,6 @@
             align-items: center;
         }
 
-        /* The actual canvas element rendered by TFJS */
         #webcam-canvas-container {
             width: 100%;
             height: 100%;
@@ -258,7 +243,8 @@
             justify-content: center;
             align-items: center;
             opacity: 0;
-            transition: opacity var(--transition-slow);
+            transition: opacity 0.8s ease;
+            transform: scale(1.05); /* Slight scale to hide edges */
         }
 
         #webcam-canvas-container.active {
@@ -268,49 +254,80 @@
         #webcam-canvas-container canvas {
             width: 100% !important;
             height: 100% !important;
-            object-fit: cover !important; /* Ensures the square fits beautifully */
-            transform: scaleX(-1); /* Mirror view */
-            border-radius: calc(var(--radius-md) - 1px);
+            object-fit: cover !important;
+            transform: scaleX(-1);
+            border-radius: 32px;
         }
 
-        /* Scanning overlay effect */
+        /* Advanced Sci-Fi / iOS Scanner Overlay */
+        .scanner-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border-radius: 32px;
+            pointer-events: none;
+            z-index: 5;
+            box-shadow: inset 0 0 0 2px rgba(255,255,255,0.1);
+        }
+
         .scan-line {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
-            height: 4px;
-            background: linear-gradient(to right, transparent, var(--primary-accent), transparent);
+            height: 3px;
+            background: #ffffff;
+            box-shadow: 
+                0 0 10px #ffffff,
+                0 0 20px #4285F4,
+                0 0 40px #4285F4;
             opacity: 0;
-            z-index: 5;
+            z-index: 6;
         }
 
         .camera-frame.scanning .scan-line {
-            opacity: 0.6;
-            animation: scanAnim 3s linear infinite;
+            opacity: 0.8;
+            animation: iosScanAnim 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
         }
 
-        @keyframes scanAnim {
-            0% { top: 0%; }
-            50% { top: 100%; }
-            100% { top: 0%; }
+        @keyframes iosScanAnim {
+            0% { top: 0%; opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { top: 100%; opacity: 0; }
         }
 
-        /* Loading State inside camera frame */
+        /* Reticle corners */
+        .reticle {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border-color: rgba(255, 255, 255, 0.8);
+            border-style: solid;
+            opacity: 0;
+            transition: opacity 0.5s;
+            z-index: 7;
+        }
+        
+        .camera-frame.scanning .reticle { opacity: 1; }
+
+        .reticle-tl { top: 20px; left: 20px; border-width: 3px 0 0 3px; border-top-left-radius: 8px; }
+        .reticle-tr { top: 20px; right: 20px; border-width: 3px 3px 0 0; border-top-right-radius: 8px; }
+        .reticle-bl { bottom: 20px; left: 20px; border-width: 0 0 3px 3px; border-bottom-left-radius: 8px; }
+        .reticle-br { bottom: 20px; right: 20px; border-width: 0 3px 3px 0; border-bottom-right-radius: 8px; }
+
+        /* Loader inside camera */
         .loader-overlay {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0; right: 0; bottom: 0;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            background: rgba(15, 23, 42, 0.8);
-            backdrop-filter: blur(4px);
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             z-index: 10;
-            transition: opacity var(--transition-normal);
+            transition: opacity 0.5s ease;
         }
 
         .loader-overlay.hidden {
@@ -318,305 +335,299 @@
             pointer-events: none;
         }
 
-        .spinner-ring {
-            width: 48px;
-            height: 48px;
-            border: 3px solid rgba(255, 255, 255, 0.1);
-            border-top: 3px solid var(--primary-accent);
+        .ios-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255,255,255,0.2);
+            border-top-color: #ffffff;
             border-radius: 50%;
-            animation: spin 1s cubic-bezier(0.6, 0.2, 0.4, 0.8) infinite;
-            margin-bottom: var(--spacing-md);
+            animation: iosSpin 1s cubic-bezier(0.5, 0.1, 0.4, 0.9) infinite;
+            margin-bottom: 16px;
         }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        @keyframes iosSpin {
+            to { transform: rotate(360deg); }
         }
 
         .loader-text {
-            font-size: 0.875rem;
-            color: var(--text-main);
-            font-weight: 500;
-            text-align: center;
-            max-width: 80%;
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
 
         /* ==========================================================================
-           RESULTS & LABELS SECTION
+           RESULTS & LABELS SECTION (Liquid Cards)
            ========================================================================== */
         .results-section {
             flex-grow: 1;
-            padding: 0 var(--spacing-lg) var(--spacing-lg);
+            padding: 0 24px 24px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: var(--spacing-md);
+            gap: 16px;
+            position: relative;
+            z-index: 20;
             -webkit-overflow-scrolling: touch;
         }
 
-        /* Custom Scrollbar for results */
-        .results-section::-webkit-scrollbar {
-            width: 4px;
-        }
-        .results-section::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        .results-section::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 10px;
-        }
+        .results-section::-webkit-scrollbar { width: 0px; }
 
-        /* Individual Label Item */
         .label-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: var(--radius-sm);
-            padding: var(--spacing-md);
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.4);
+            border-left: 1px solid rgba(255, 255, 255, 0.2);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            border-right: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 20px;
+            padding: 16px 20px;
             display: flex;
             flex-direction: column;
-            gap: var(--spacing-sm);
-            transition: all var(--transition-normal);
-            position: relative;
-            overflow: hidden;
-            /* Flex order will be manipulated by JS based on confidence */
-            order: 99; 
+            gap: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            order: 99;
         }
 
         .label-card.active-prediction {
-            background: rgba(255, 255, 255, 0.08);
-            border-color: rgba(255, 255, 255, 0.2);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.25);
+            transform: scale(1.02);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2), inset 0 0 0 1px rgba(255,255,255,0.5);
         }
 
         .label-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            position: relative;
-            z-index: 2;
         }
 
         .label-name {
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--text-main);
+            font-size: 16px;
+            font-weight: 700;
+            color: #ffffff;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
             text-transform: capitalize;
-            letter-spacing: 0.025em;
         }
 
         .label-confidence {
-            font-size: 0.875rem;
-            font-weight: 700;
+            font-size: 15px;
+            font-weight: 800;
+            color: #ffffff;
+            background: rgba(0,0,0,0.2);
+            padding: 4px 10px;
+            border-radius: 12px;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
             font-variant-numeric: tabular-nums;
-            background: rgba(0, 0, 0, 0.3);
-            padding: 2px 8px;
-            border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        /* Progress Bar Track & Fill */
         .progress-track {
             width: 100%;
-            height: 8px;
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 4px;
+            height: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 5px;
             overflow: hidden;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.5);
             position: relative;
-            z-index: 2;
         }
 
         .progress-fill {
             height: 100%;
-            width: 0%; /* JS will update this */
-            background: var(--neutral-color);
-            border-radius: 4px;
-            transition: width 0.15s linear, background-color 0.3s ease;
+            width: 0%;
+            background: #ffffff;
+            border-radius: 5px;
+            transition: width 0.15s linear, background 0.3s ease;
+            box-shadow: 0 0 10px rgba(255,255,255,0.5);
         }
 
-        /* State Modifiers */
-        .confidence-high .progress-fill { background: var(--success-color); }
-        .confidence-high .label-confidence { color: var(--success-color); border-color: rgba(16, 185, 129, 0.3); }
-        
-        .confidence-med .progress-fill { background: var(--warning-color); }
-        .confidence-med .label-confidence { color: var(--warning-color); border-color: rgba(245, 158, 11, 0.3); }
-        
-        .confidence-low .progress-fill { background: var(--danger-color); }
-        .confidence-low .label-confidence { color: var(--danger-color); border-color: rgba(239, 68, 68, 0.3); }
+        /* Dynamic Google Colored Progress Bars based on Confidence */
+        .confidence-high .progress-fill { 
+            background: linear-gradient(90deg, #34A853, #66bb6a); /* Google Green */
+            box-shadow: 0 0 15px rgba(52, 168, 83, 0.6);
+        }
+        .confidence-high .label-confidence { color: #81c784; }
+
+        .confidence-med .progress-fill { 
+            background: linear-gradient(90deg, #FBBC05, #ffca28); /* Google Yellow */
+            box-shadow: 0 0 15px rgba(251, 188, 5, 0.6);
+        }
+        .confidence-med .label-confidence { color: #ffd54f; }
+
+        .confidence-low .progress-fill { 
+            background: linear-gradient(90deg, #EA4335, #ef5350); /* Google Red */
+            box-shadow: 0 0 15px rgba(234, 67, 53, 0.6);
+        }
+        .confidence-low .label-confidence { color: #e57373; }
 
         /* ==========================================================================
-           CONTROLS SECTION
+           CONTROLS (iOS Glass Buttons)
            ========================================================================== */
         .controls-section {
-            padding: var(--spacing-lg);
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            background: rgba(0, 0, 0, 0.1);
-            flex-shrink: 0;
+            padding: 20px 24px 30px;
             display: flex;
             justify-content: center;
+            position: relative;
+            z-index: 20;
+            background: linear-gradient(to top, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
         }
 
-        .btn-primary {
+        .btn-ios {
             width: 100%;
             max-width: 300px;
-            padding: 16px 24px;
-            border-radius: var(--radius-lg);
-            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            padding: 18px 24px;
+            border-radius: 24px;
+            
+            /* Glass Button Style */
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.6);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            
             color: #ffffff;
-            font-size: 1rem;
+            font-size: 18px;
             font-weight: 700;
-            border: none;
-            outline: none;
+            letter-spacing: 0.5px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+            
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
-            transition: all var(--transition-fast);
+            outline: none;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
 
-        .btn-primary:active {
-            transform: scale(0.97);
-            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.4);
+        .btn-ios:active {
+            transform: scale(0.95) translateY(2px);
+            background: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
 
-        .btn-primary:disabled {
-            background: rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.4);
-            box-shadow: none;
+        .btn-ios:disabled {
+            opacity: 0.6;
             cursor: not-allowed;
             transform: none;
-        }
-        
-        .btn-icon {
-            width: 20px;
-            height: 20px;
-            fill: currentColor;
         }
 
         /* Status Indicator */
         .system-status {
             position: absolute;
-            top: var(--spacing-md);
-            right: var(--spacing-md);
+            top: 24px;
+            right: 24px;
             display: flex;
             align-items: center;
-            gap: 6px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: var(--text-muted);
-            background: rgba(0, 0, 0, 0.4);
-            padding: 4px 10px;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            z-index: 20;
+            gap: 8px;
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.2);
+            z-index: 30;
         }
 
         .status-dot {
-            width: 8px;
-            height: 8px;
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
-            background: var(--danger-color);
-            box-shadow: 0 0 8px var(--danger-color);
-            transition: background 0.3s, box-shadow 0.3s;
+            background: #EA4335;
+            box-shadow: 0 0 10px #EA4335;
+            transition: all 0.3s ease;
         }
 
         .system-status.online .status-dot {
-            background: var(--success-color);
-            box-shadow: 0 0 8px var(--success-color);
+            background: #34A853;
+            box-shadow: 0 0 10px #34A853;
         }
 
-        /* Utility classes */
-        .hidden-hard {
-            display: none !important;
+        .status-text {
+            color: #fff;
+            font-size: 12px;
+            font-weight: 600;
         }
 
-        /* ==========================================================================
-           ANIMATIONS & TRANSITIONS
-           ========================================================================== */
-        .fade-in-up {
-            animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        /* Animations */
+        .fade-in {
+            animation: fadeInAnim 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
             opacity: 0;
             transform: translateY(20px);
         }
 
-        @keyframes fadeInUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        @keyframes fadeInAnim {
+            to { opacity: 1; transform: translateY(0); }
         }
+        
+        .hidden-hard { display: none !important; }
+
     </style>
 </head>
 <body>
 
-    <!-- Canvas Particle Background Layer -->
-    <canvas id="bg-canvas"></canvas>
+    <!-- CSS Animated Google Colors Background -->
+    <div class="google-gradient-bg"></div>
 
-    <!-- CSS Ambient Orbs -->
-    <div class="ambient-orb orb-1"></div>
-    <div class="ambient-orb orb-2"></div>
-    <div class="ambient-orb orb-3"></div>
+    <!-- Ambient Orbs for Liquid Light Reflections -->
+    <div class="light-orb orb-blue"></div>
+    <div class="light-orb orb-red"></div>
+    <div class="light-orb orb-yellow"></div>
 
-    <div class="app-wrapper">
-        <main class="glass-panel">
+    <div class="app-wrapper" id="parallax-wrapper">
+        <main class="liquid-glass-panel" id="main-panel">
             
-            <!-- System Status Indicator -->
             <div class="system-status" id="sys-status">
                 <div class="status-dot"></div>
-                <span id="sys-status-text">Offline</span>
+                <span class="status-text" id="sys-status-text">Standby</span>
             </div>
 
-            <!-- Header -->
-            <header class="header fade-in-up" style="animation-delay: 0.1s;">
-                <h1>Neural Vision</h1>
-                <p>Live Machine Learning Classification</p>
+            <header class="header fade-in" style="animation-delay: 0.1s;">
+                <h1>CoreVision AI</h1>
+                <p>Neural Image Classification Engine</p>
             </header>
 
-            <!-- Camera Viewport -->
-            <section class="viewport-section fade-in-up" style="animation-delay: 0.2s;">
+            <section class="viewport-section fade-in" style="animation-delay: 0.2s;">
                 <div class="camera-frame" id="camera-frame">
                     
-                    <!-- Loading Overlay -->
                     <div class="loader-overlay" id="loader-overlay">
-                        <div class="spinner-ring"></div>
-                        <p class="loader-text" id="loader-msg">Awaiting initialization...</p>
+                        <div class="ios-spinner"></div>
+                        <p class="loader-text" id="loader-msg">Booting Tensor Cores...</p>
                     </div>
                     
-                    <!-- Scanning Animation Element -->
-                    <div class="scan-line"></div>
+                    <div class="scanner-overlay">
+                        <div class="scan-line"></div>
+                        <div class="reticle reticle-tl"></div>
+                        <div class="reticle reticle-tr"></div>
+                        <div class="reticle reticle-bl"></div>
+                        <div class="reticle reticle-br"></div>
+                    </div>
 
-                    <!-- TFJS Canvas Container -->
                     <div id="webcam-canvas-container"></div>
                 </div>
             </section>
 
-            <!-- Results Section (Dynamically Populated) -->
-            <section class="results-section fade-in-up" id="results-container" style="animation-delay: 0.3s;">
-                <!-- Skeleton Loading State for Results -->
+            <section class="results-section fade-in" id="results-container" style="animation-delay: 0.3s;">
+                <!-- Skeleton UI to establish layout -->
                 <div class="label-card" style="opacity: 0.5;">
                     <div class="label-header">
-                        <span class="label-name" style="background: rgba(255,255,255,0.1); color: transparent; border-radius: 4px;">Loading Class</span>
+                        <span class="label-name" style="background: rgba(255,255,255,0.2); color: transparent; border-radius: 4px;">Loading Data</span>
                         <span class="label-confidence" style="background: transparent; border: none; color: transparent;">0.0%</span>
                     </div>
-                    <div class="progress-track" style="background: rgba(255,255,255,0.05);"></div>
-                </div>
-                <div class="label-card" style="opacity: 0.3;">
-                    <div class="label-header">
-                        <span class="label-name" style="background: rgba(255,255,255,0.1); color: transparent; border-radius: 4px;">Loading Class</span>
-                        <span class="label-confidence" style="background: transparent; border: none; color: transparent;">0.0%</span>
-                    </div>
-                    <div class="progress-track" style="background: rgba(255,255,255,0.05);"></div>
+                    <div class="progress-track"><div class="progress-fill" style="width: 0%;"></div></div>
                 </div>
             </section>
 
-            <!-- Controls -->
-            <section class="controls-section fade-in-up" style="animation-delay: 0.4s;">
-                <button class="btn-primary" id="start-btn">
-                    <svg class="btn-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/>
+            <section class="controls-section fade-in" style="animation-delay: 0.4s;">
+                <button class="btn-ios" id="start-btn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polygon points="10 8 16 12 10 16 10 8"></polygon>
                     </svg>
-                    <span>Activate Neural Engine</span>
+                    <span>Initialize Camera</span>
                 </button>
             </section>
 
@@ -624,115 +635,25 @@
     </div>
 
     <!-- ==========================================================================
-         APPLICATION LOGIC & CORE ARCHITECTURE
+         JAVASCRIPT APPLICATION LOGIC
          ========================================================================== -->
     <script>
         /**
-         * ----------------------------------------------------------------------
-         * MODULE 1: Canvas Particle Background Engine
-         * Implements a responsive, performant particle system in the background
-         * ----------------------------------------------------------------------
-         */
-        class BackgroundEngine {
-            constructor() {
-                this.canvas = document.getElementById('bg-canvas');
-                this.ctx = this.canvas.getContext('2d', { alpha: false });
-                this.particles = [];
-                this.particleCount = 50; // Optimized for mobile performance
-                
-                this.init();
-                this.bindEvents();
-                this.animate();
-            }
-
-            init() {
-                this.resize();
-                this.createParticles();
-            }
-
-            resize() {
-                this.width = window.innerWidth;
-                this.height = window.innerHeight;
-                this.canvas.width = this.width;
-                this.canvas.height = this.height;
-            }
-
-            bindEvents() {
-                window.addEventListener('resize', () => this.resize());
-            }
-
-            createParticles() {
-                this.particles = [];
-                for (let i = 0; i < this.particleCount; i++) {
-                    this.particles.push({
-                        x: Math.random() * this.width,
-                        y: Math.random() * this.height,
-                        radius: Math.random() * 2 + 1,
-                        vx: (Math.random() - 0.5) * 0.5,
-                        vy: (Math.random() - 0.5) * 0.5,
-                        alpha: Math.random() * 0.5 + 0.1
-                    });
-                }
-            }
-
-            draw() {
-                // Fill background
-                this.ctx.fillStyle = '#0f172a';
-                this.ctx.fillRect(0, 0, this.width, this.height);
-
-                // Draw gradient mesh abstraction
-                const gradient = this.ctx.createRadialGradient(
-                    this.width / 2, this.height / 2, 0,
-                    this.width / 2, this.height / 2, this.width
-                );
-                gradient.addColorStop(0, '#1e293b');
-                gradient.addColorStop(1, '#0f172a');
-                this.ctx.fillStyle = gradient;
-                this.ctx.fillRect(0, 0, this.width, this.height);
-
-                // Draw and update particles
-                this.particles.forEach(p => {
-                    p.x += p.vx;
-                    p.y += p.vy;
-
-                    // Boundary collision
-                    if (p.x < 0 || p.x > this.width) p.vx *= -1;
-                    if (p.y < 0 || p.y > this.height) p.vy *= -1;
-
-                    this.ctx.beginPath();
-                    this.ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                    this.ctx.fillStyle = `rgba(255, 255, 255, ${p.alpha})`;
-                    this.ctx.fill();
-                });
-            }
-
-            animate() {
-                this.draw();
-                requestAnimationFrame(() => this.animate());
-            }
-        }
-
-        // Initialize Background
-        const bgEngine = new BackgroundEngine();
-
-
-        /**
-         * ----------------------------------------------------------------------
-         * MODULE 2: Neural Vision Controller
-         * Handles Teachable Machine model loading, inference, and camera loops.
-         * ----------------------------------------------------------------------
+         * System Configuration
          */
         const CONFIG = {
-            // Provided Model URL
             MODEL_URL: "https://teachablemachine.withgoogle.com/models/DPuAl5UGa/",
-            // Core constraints to fix choppiness and performance issues
-            RESOLUTION: 224, // Standard MobileNet/TM input resolution. DO NOT CHANGE.
-            CONFIDENCE_THRESHOLDS: {
+            RESOLUTION: 224, // Optimized standard size for MobileNet
+            THRESHOLDS: {
                 HIGH: 0.85,
-                MED: 0.50
-            }
+                MED: 0.40
+            },
+            MAX_FPS: 60
         };
 
+        /**
+         * Global Application State
+         */
         const STATE = {
             model: null,
             webcam: null,
@@ -740,9 +661,13 @@
             classLabels: [],
             isRunning: false,
             rafId: null,
-            elements: {}
+            lastFrameTime: 0,
+            uiElements: {}
         };
 
+        /**
+         * DOM Node References
+         */
         const DOM = {
             startBtn: document.getElementById('start-btn'),
             loaderOverlay: document.getElementById('loader-overlay'),
@@ -751,19 +676,21 @@
             resultsContainer: document.getElementById('results-container'),
             sysStatus: document.getElementById('sys-status'),
             sysStatusText: document.getElementById('sys-status-text'),
-            cameraFrame: document.getElementById('camera-frame')
+            cameraFrame: document.getElementById('camera-frame'),
+            parallaxWrapper: document.getElementById('parallax-wrapper'),
+            mainPanel: document.getElementById('main-panel')
         };
 
         /**
-         * Application Bootstrapper
+         * Core Initialization Sequence
          */
-        async function startSystem() {
+        async function bootSequence() {
             if (STATE.isRunning) return;
             
             try {
-                uiSetLoadingState(true, "Downloading AI Weights...");
+                updateUIState(true, "Downloading Neural Weights...");
                 
-                // 1. Load the Teachable Machine Model
+                // 1. Model Loading Phase
                 const modelURL = CONFIG.MODEL_URL + "model.json";
                 const metadataURL = CONFIG.MODEL_URL + "metadata.json";
                 
@@ -771,193 +698,180 @@
                 STATE.maxClasses = STATE.model.getTotalClasses();
                 STATE.classLabels = STATE.model.getClassLabels();
                 
-                uiSetLoadingState(true, "Initializing Hardware Camera...");
+                updateUIState(true, "Requesting Hardware Access...");
                 
-                // 2. Initialize Camera (Locked to fixed 224x224 to solve choppiness)
-                const flip = true; 
-                STATE.webcam = new tmImage.Webcam(CONFIG.RESOLUTION, CONFIG.RESOLUTION, flip);
-                
-                // Request access explicitly
+                // 2. Hardware Initialization Phase
+                STATE.webcam = new tmImage.Webcam(CONFIG.RESOLUTION, CONFIG.RESOLUTION, true);
                 await STATE.webcam.setup({ facingMode: "user" }); 
                 
-                uiSetLoadingState(true, "Buffering Stream...");
+                updateUIState(true, "Synchronizing Streams...");
                 await STATE.webcam.play();
                 
-                // 3. Mount Canvas to DOM
+                // 3. DOM Mounting Phase
+                DOM.webcamContainer.innerHTML = ''; // Clear any existing
                 DOM.webcamContainer.appendChild(STATE.webcam.canvas);
                 
-                // 4. Generate the UI dynamically based on the actual classes fetched
-                buildDynamicUI(STATE.classLabels);
+                // 4. UI Generation Phase
+                constructLiquidCards(STATE.classLabels);
                 
-                // 5. Finalize setup
+                // 5. Final Activation
                 STATE.isRunning = true;
-                uiSetLoadingState(false);
-                uiSetSystemStatus(true);
+                updateUIState(false);
+                setSystemOnline(true);
                 DOM.cameraFrame.classList.add('scanning');
                 
-                // 6. Begin Inference Loop (Await pattern fixes freezing issues)
-                STATE.rafId = window.requestAnimationFrame(inferenceLoop);
+                // 6. Enter Execution Loop
+                STATE.rafId = window.requestAnimationFrame(tensorExecutionLoop);
 
             } catch (error) {
-                console.error("System Initialization Error:", error);
-                uiSetLoadingState(false);
-                uiSetSystemStatus(false);
-                alert("Camera access denied or model failed to load. Ensure you are on HTTPS and grant permissions.");
+                console.error("Boot Sequence Failure:", error);
+                updateUIState(false);
+                setSystemOnline(false);
+                alert("Hardware access denied or network failure. Please grant camera permissions and ensure a stable connection.");
                 
-                // Reset Button
                 DOM.startBtn.disabled = false;
                 DOM.startBtn.innerHTML = `
-                    <svg class="btn-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21.5 2v6h-6M2.13 15.57a10 10 0 1 0 3.43-5.35l-5.32 5.35"></path>
                     </svg>
-                    <span>Retry Connection</span>
+                    <span>Reboot System</span>
                 `;
             }
         }
 
         /**
-         * Core asynchronous inference loop.
-         * Awaiting the predict function prevents browser thread blocking and choppiness.
+         * Continuous Execution Loop (Awaited to prevent main thread blocking)
          */
-        async function inferenceLoop() {
+        async function tensorExecutionLoop(timestamp) {
             if (!STATE.isRunning) return;
 
-            // Update webcam frame
-            STATE.webcam.update(); 
+            // Frame rate limiter (optional safety feature)
+            const elapsed = timestamp - STATE.lastFrameTime;
+            const fpsInterval = 1000 / CONFIG.MAX_FPS;
+
+            if (elapsed > fpsInterval) {
+                STATE.lastFrameTime = timestamp - (elapsed % fpsInterval);
+                
+                STATE.webcam.update(); 
+                await processInference(); 
+            }
             
-            // Wait for tensor processing to finish before queueing next frame
-            await processFrame(); 
-            
-            // Loop recursively
-            STATE.rafId = window.requestAnimationFrame(inferenceLoop);
+            STATE.rafId = window.requestAnimationFrame(tensorExecutionLoop);
         }
 
         /**
-         * Processes a single frame and updates DOM logic
+         * Frame Inference and DOM Mapping
          */
-        async function processFrame() {
+        async function processInference() {
             if (!STATE.model || !STATE.webcam) return;
 
-            // Execute inference
             const predictions = await STATE.model.predict(STATE.webcam.canvas);
             
-            // Map and update DOM efficiently
             for (let i = 0; i < STATE.maxClasses; i++) {
-                const p = predictions[i];
-                const cleanName = sanitizeClassName(p.className);
-                const prob = p.probability;
-                const percentage = (prob * 100).toFixed(1);
+                const pred = predictions[i];
+                const cleanID = sanitizeID(pred.className);
+                const probability = pred.probability;
+                const percentageStr = (probability * 100).toFixed(1);
                 
-                // Retrieve cached DOM elements
-                const els = STATE.elements[cleanName];
-                if (!els) continue;
+                const ui = STATE.uiElements[cleanID];
+                if (!ui) continue;
 
-                // Update text and bar
-                els.confidenceText.innerText = `${percentage}%`;
-                els.progressBar.style.width = `${percentage}%`;
+                // Update Values
+                ui.text.innerText = `${percentageStr}%`;
+                ui.fill.style.width = `${percentageStr}%`;
 
-                // Update styling based on thresholds
-                els.card.className = 'label-card'; // Reset
+                // Wipe previous state classes
+                ui.card.classList.remove('confidence-high', 'confidence-med', 'confidence-low', 'active-prediction');
                 
-                if (prob >= CONFIG.CONFIDENCE_THRESHOLDS.HIGH) {
-                    els.card.classList.add('confidence-high', 'active-prediction');
-                    els.card.style.order = 1; // Bubble to top
-                } else if (prob >= CONFIG.CONFIDENCE_THRESHOLDS.MED) {
-                    els.card.classList.add('confidence-med');
-                    els.card.style.order = 2;
+                // Apply contextual liquid styling
+                if (probability >= CONFIG.THRESHOLDS.HIGH) {
+                    ui.card.classList.add('confidence-high', 'active-prediction');
+                    ui.card.style.order = 1; 
+                } else if (probability >= CONFIG.THRESHOLDS.MED) {
+                    ui.card.classList.add('confidence-med');
+                    ui.card.style.order = 2;
                 } else {
-                    els.card.classList.add('confidence-low');
-                    els.card.style.order = 3;
+                    ui.card.classList.add('confidence-low');
+                    ui.card.style.order = 3;
                 }
             }
         }
 
         /**
-         * ----------------------------------------------------------------------
-         * MODULE 3: UI Builders and State Managers
-         * ----------------------------------------------------------------------
+         * Constructs the Liquid Glass UI Cards dynamically
          */
-
-        /**
-         * Clears skeleton loaders and builds real label components based on metadata
-         * @param {Array<string>} labels 
-         */
-        function buildDynamicUI(labels) {
-            DOM.resultsContainer.innerHTML = ''; // Clear skeleton
-            STATE.elements = {}; // Reset element cache
+        function constructLiquidCards(labels) {
+            DOM.resultsContainer.innerHTML = ''; 
+            STATE.uiElements = {}; 
 
             labels.forEach((label, index) => {
-                const cleanName = sanitizeClassName(label);
+                const cleanID = sanitizeID(label);
                 
-                // Create Card Container
+                // Outer Card
                 const card = document.createElement('div');
-                card.className = 'label-card fade-in-up';
-                card.id = `card-${cleanName}`;
+                card.className = 'label-card fade-in';
+                card.id = `card-${cleanID}`;
                 card.style.animationDelay = `${(index * 0.1) + 0.1}s`;
 
-                // Create Header
+                // Header Area
                 const header = document.createElement('div');
                 header.className = 'label-header';
 
-                const nameSpan = document.createElement('span');
-                nameSpan.className = 'label-name';
-                nameSpan.innerText = label;
+                const nameEl = document.createElement('span');
+                nameEl.className = 'label-name';
+                nameEl.innerText = label;
 
-                const confSpan = document.createElement('span');
-                confSpan.className = 'label-confidence';
-                confSpan.id = `conf-${cleanName}`;
-                confSpan.innerText = '0.0%';
+                const confEl = document.createElement('span');
+                confEl.className = 'label-confidence';
+                confEl.id = `conf-${cleanID}`;
+                confEl.innerText = '0.0%';
 
-                header.appendChild(nameSpan);
-                header.appendChild(confSpan);
+                header.appendChild(nameEl);
+                header.appendChild(confEl);
 
-                // Create Progress Bar
+                // Progress Area
                 const track = document.createElement('div');
                 track.className = 'progress-track';
 
                 const fill = document.createElement('div');
                 fill.className = 'progress-fill';
-                fill.id = `fill-${cleanName}`;
+                fill.id = `fill-${cleanID}`;
 
                 track.appendChild(fill);
 
-                // Assemble Card
+                // Assembly
                 card.appendChild(header);
                 card.appendChild(track);
                 DOM.resultsContainer.appendChild(card);
 
-                // Cache elements for fast O(1) access during 60FPS loop
-                STATE.elements[cleanName] = {
+                // Cache for O(1) loop access
+                STATE.uiElements[cleanID] = {
                     card: card,
-                    confidenceText: confSpan,
-                    progressBar: fill
+                    text: confEl,
+                    fill: fill
                 };
             });
         }
 
         /**
-         * Sanitizes class names for safe use as HTML IDs/Keys
-         * @param {string} name 
-         * @returns {string}
+         * Helper: Sanitize strings for DOM IDs
          */
-        function sanitizeClassName(name) {
-            return name.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase();
+        function sanitizeID(str) {
+            return str.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase();
         }
 
         /**
-         * UI State manager for loading screens
-         * @param {boolean} isLoading 
-         * @param {string} msg 
+         * Helper: Manage Loading Overlay States
          */
-        function uiSetLoadingState(isLoading, msg = "") {
+        function updateUIState(isLoading, message = "") {
             if (isLoading) {
                 DOM.startBtn.disabled = true;
                 DOM.startBtn.innerHTML = `
-                    <div class="spinner-ring" style="width: 20px; height: 20px; margin: 0; border-width: 2px;"></div>
-                    <span>Processing...</span>
+                    <div class="ios-spinner" style="width: 24px; height: 24px; margin: 0; border-width: 2px;"></div>
+                    <span>Initializing...</span>
                 `;
                 DOM.loaderOverlay.classList.remove('hidden');
-                DOM.loaderMsg.innerText = msg;
+                DOM.loaderMsg.innerText = message;
             } else {
                 DOM.loaderOverlay.classList.add('hidden');
                 DOM.startBtn.classList.add('hidden-hard');
@@ -966,21 +880,37 @@
         }
 
         /**
-         * UI State manager for network/status indicator
-         * @param {boolean} isOnline 
+         * Helper: System Status Indicator
          */
-        function uiSetSystemStatus(isOnline) {
+        function setSystemOnline(isOnline) {
             if (isOnline) {
                 DOM.sysStatus.classList.add('online');
-                DOM.sysStatusText.innerText = 'Engine Active';
+                DOM.sysStatusText.innerText = 'System Online';
             } else {
                 DOM.sysStatus.classList.remove('online');
-                DOM.sysStatusText.innerText = 'System Fault';
+                DOM.sysStatusText.innerText = 'System Offline';
             }
         }
 
-        // Bind Start Event
-        DOM.startBtn.addEventListener('click', startSystem);
+        /**
+         * Optional: Subtle Parallax Effect for Liquid Glass
+         * Tracks mouse movement on desktop to tilt the glass panel slightly
+         */
+        DOM.parallaxWrapper.addEventListener('mousemove', (e) => {
+            if (window.innerWidth < 768) return; // Disable on mobile to save battery
+            
+            const xAxis = (window.innerWidth / 2 - e.pageX) / 25;
+            const yAxis = (window.innerHeight / 2 - e.pageY) / 25;
+            
+            DOM.mainPanel.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+        });
+
+        DOM.parallaxWrapper.addEventListener('mouseleave', () => {
+            DOM.mainPanel.style.transform = `rotateY(0deg) rotateX(0deg)`;
+        });
+
+        // Event Listener Attachment
+        DOM.startBtn.addEventListener('click', bootSequence);
 
     </script>
 </body>
