@@ -173,6 +173,14 @@
             background: rgba(255,255,255,0.02);
             flex-shrink: 0;
         }
+            .floating-element {
+            animation: floatSmooth 4s ease-in-out infinite alternate;
+        }
+        
+        @keyframes floatSmooth {
+            0% { transform: translateY(0px); }
+            100% { transform: translateY(-8px); }
+        }
 
         .interface-header h1 {
             font-size: 20px;
@@ -419,6 +427,7 @@
             width: 100%;
             max-width: 320px;
             padding: 14px;
+            margin-bottom: 30px; /* <--- ADD THIS LINE HERE */
             border-radius: var(--radius-lg);
             background: rgba(255,255,255,0.2);
             backdrop-filter: blur(10px);
@@ -563,7 +572,7 @@
             
             <!-- Header -->
             <header class="interface-header">
-                <h1>Neural Engine</h1>
+                <h1>SkinScan™</h1>
                 <p>Live skin detection</p>
             </header>
 
