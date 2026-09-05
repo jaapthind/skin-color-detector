@@ -3,7 +3,7 @@
 <head>
     <!-- 
       ==========================================================================
-      META CONFIGURATION & ENVIRONMENT SETUP (MOBILE FORTIFIED)
+      META CONFIGURATION & ENVIRONMENT SETUP (GLITCH-FREE MOBILE FORTIFIED)
       ========================================================================== 
     -->
     <meta charset="utf-8">
@@ -12,10 +12,10 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#000000">
-    <meta name="description" content="Advanced Neural Image Classification Engine with robust mobile viewports and stabilized inference triggers.">
+    <meta name="description" content="Advanced Neural Image Classification Engine with stable static grid layouts and glitch-free mobile inference.">
     <meta name="author" content="NeuralVision Systems">
     
-    <title>Skin-Detector</title>
+    <title>AI Vision Classification - Glitch Free Stabilized</title>
 
     <!-- 
       ==========================================================================
@@ -27,7 +27,7 @@
 
     <!-- 
       ==========================================================================
-      GLOBAL STYLESHEET (FIXED FLEX SHRINKAGE & OVERFLOW GLITCHES)
+      GLOBAL STYLESHEET (FIXED CARD SWAPPING & STABLE STATIC LAYOUT)
       ========================================================================== 
     -->
     <style>
@@ -47,7 +47,7 @@
         html, body {
             width: 100%;
             height: 100%;
-            position: fixed; /* Prevents mobile browser rubber-banding/overflow */
+            position: fixed; 
             overflow: hidden;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             -webkit-tap-highlight-color: transparent;
@@ -134,7 +134,7 @@
         }
 
         /* ----------------------------------------------------------------------
-           4. MAIN APPLICATION CHASSIS (STABILIZED LAYOUT)
+           4. MAIN APPLICATION CHASSIS
            ---------------------------------------------------------------------- */
         .application-root {
             position: relative;
@@ -189,7 +189,7 @@
         }
 
         /* ----------------------------------------------------------------------
-           6. SENSOR VIEWPORT (FLEX SHRINK GUARDED)
+           6. SENSOR VIEWPORT
            ---------------------------------------------------------------------- */
         .sensor-container {
             padding: var(--spacing-md);
@@ -202,7 +202,7 @@
 
         .sensor-mount {
             width: 100%;
-            max-width: 220px; /* Scaled safely to fit mobile screens without clipping */
+            max-width: 210px;
             aspect-ratio: 1 / 1;
             background: rgba(0,0,0,0.6);
             border-radius: var(--radius-lg);
@@ -235,7 +235,6 @@
             border-radius: calc(var(--radius-lg) - 2px);
         }
 
-        /* Scanner Beam */
         .scanner-beam {
             position: absolute;
             top: 0; left: 0; right: 0;
@@ -257,7 +256,6 @@
             100% { top: calc(100% - 3px); opacity: 0; }
         }
 
-        /* Boot Loader Overlay */
         .boot-loader {
             position: absolute;
             inset: 0;
@@ -295,7 +293,7 @@
         }
 
         /* ----------------------------------------------------------------------
-           7. CLASSIFICATION METRICS (SIDE-BY-SIDE GRID - NO CLIPPING)
+           7. CLASSIFICATION METRICS (STABLE SIDE-BY-SIDE GRID - NO RE-ORDERING)
            ---------------------------------------------------------------------- */
         .metrics-grid {
             flex-grow: 1;
@@ -325,7 +323,8 @@
             flex-direction: column;
             gap: 6px;
             box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+            transition: border-color 0.3s ease, background 0.3s ease;
+            /* NOTE: Explicitly NO flex 'order' property to prevent swapping places glitch */
         }
 
         .metric-header {
@@ -375,11 +374,10 @@
             transition: width 0.1s linear, background-image 0.3s ease, box-shadow 0.3s ease;
         }
 
-        /* State Modifiers */
+        /* Stable Tier Modifiers (No layout shifting transforms) */
         .tier-alpha { 
             background: rgba(255,255,255,0.15); 
             border-color: rgba(52, 168, 83, 0.6); 
-            transform: translateY(-1px);
         }
         .tier-alpha .metric-fill { 
             background-image: linear-gradient(90deg, var(--brand-green), #66bb6a); 
@@ -566,7 +564,7 @@
             <!-- Header -->
             <header class="interface-header">
                 <h1>Neural Engine</h1>
-                <p>Live color detection</p>
+                <p>Live skin detection</p>
             </header>
 
             <!-- Video/Sensor Area -->
@@ -581,7 +579,7 @@
                 </div>
             </section>
 
-            <!-- Metrics Grid (Side by Side) -->
+            <!-- Metrics Grid (Side by Side - Static Position Order) -->
             <section class="metrics-grid" id="metrics-grid">
                 <!-- Dynamically populated cards -->
             </section>
@@ -611,13 +609,13 @@
         const AppConfig = {
             ModelEndpoint: "https://teachablemachine.withgoogle.com/models/DPuAl5UGa/",
             Resolution: 224, 
-            TargetFPS: 30, // Locked to steady 30fps for smooth mobile performance
+            TargetFPS: 30, 
             Thresholds: {
                 Alpha: 0.80, 
                 Beta:  0.40  
             },
-            TriggerValue: 0.9, // Set target trigger value (e.g. 1.0 for 100%)
-            WarmupFrames: 15   // Prevents instant glitch triggers upon startup initialization
+            TriggerValue: 1.0, 
+            WarmupFrames: 15   
         };
 
         /**
@@ -631,7 +629,7 @@
             AnimationID: null,
             LastFrameTime: 0,
             OverlayActive: false,
-            FrameCount: 0, // Used for warmup stabilization
+            FrameCount: 0,
             UINodes: {} 
         };
 
@@ -687,7 +685,7 @@
                 DOM.BtnStart.classList.add('display-none');
                 
                 AppState.IsRunning = true;
-                AppState.FrameCount = 0; // Reset warmup counter
+                AppState.FrameCount = 0;
                 AppState.AnimationID = window.requestAnimationFrame(InferenceLoop);
 
             } catch (err) {
@@ -721,14 +719,13 @@
         };
 
         /**
-         * Evaluate current frame and map safely to UI without glitches
+         * Evaluate current frame and map safely to UI without position-swapping glitches
          */
         const ProcessInference = async () => {
             if (!AppState.Model || !AppState.Webcam) return;
             
             const predictions = await AppState.Model.predict(AppState.Webcam.canvas);
             
-            // Increment warmup frame counter to ignore initial 0% spikes or glitches
             if (AppState.FrameCount < AppConfig.WarmupFrames) {
                 AppState.FrameCount++;
                 return;
@@ -740,7 +737,6 @@
                 const rawProb = pred.probability;
                 const formattedPercent = (rawProb * 100).toFixed(1);
                 
-                // Trigger condition check with stabilization boundary
                 if (rawProb >= AppConfig.TriggerValue && !AppState.OverlayActive && AppState.FrameCount >= AppConfig.WarmupFrames) {
                     Trigger100PercentEvent(pred.className);
                     return; 
@@ -756,13 +752,10 @@
 
                 if (rawProb >= AppConfig.Thresholds.Alpha) {
                     uiNode.Card.classList.add('tier-alpha');
-                    uiNode.Card.style.order = 1;
                 } else if (rawProb >= AppConfig.Thresholds.Beta) {
                     uiNode.Card.classList.add('tier-beta');
-                    uiNode.Card.style.order = 2;
                 } else {
                     uiNode.Card.classList.add('tier-gamma');
-                    uiNode.Card.style.order = 3;
                 }
             }
         };
@@ -782,7 +775,7 @@
          */
         DOM.BtnResetOverlay.addEventListener('click', () => {
             DOM.OverlayCongrats.classList.remove('show');
-            AppState.FrameCount = 0; // Reset warmup frames on resume to prevent instant re-trigger
+            AppState.FrameCount = 0;
             setTimeout(() => {
                 AppState.OverlayActive = false;
             }, 800);
@@ -791,7 +784,7 @@
         });
 
         /**
-         * Builds the CSS Flexbox Side-by-Side metrics grid dynamically
+         * Builds the CSS Flexbox Side-by-Side metrics grid statically (Fixed layout position order)
          */
         const BuildMetricCards = (labels) => {
             DOM.MetricsGrid.innerHTML = '';
